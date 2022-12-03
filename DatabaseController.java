@@ -82,8 +82,30 @@ public class DatabaseController{
         return false;
     }
 
-    //get all theaters
-    public static ArrayList<Theater> getAllTheaters(){
+    //VIEWING STUFF
+
+    //returns list of all showtime objects
+    public static ArrayList<Showtime> getAllShowtimes(){
+        return null;
+    }
+
+    //returns list of all showtime objects with public movies
+    public static ArrayList<Showtime> getPublicShowtimes(){
+        return null;
+    }
+
+    //returns list of strings of all public movie titles
+    public static ArrayList<String> getPublicMovies(){
+        return null;
+    }
+
+    //returns list of strings of all movie titles
+    public static ArrayList<String> getAllMovies(){
+        return null;
+    }
+
+    //returns list of strings of all theaters
+    public static ArrayList<String> getAllTheaters(){
         return null;
     }
 
