@@ -31,7 +31,11 @@ public class RegisteredUser extends User{
             this.credit = credit;
             this.lastPayment = date;
         }
-
+    
+    
+    public CreditCard getCreditCard() {
+        return card;
+    }
     public String getEmail(){
         return email;
     }
@@ -46,6 +50,10 @@ public class RegisteredUser extends User{
 
     public String getPassword(){
         return password;
+    }
+
+    public Date getLastPayment() {
+        return lastPayment;
     }
 
     public boolean checkMemberExpired(){

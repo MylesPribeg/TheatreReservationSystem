@@ -11,6 +11,22 @@ public class CreditCard{
         this.cvv = cvv;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public int getExpiryDate() {
+        return expiryDate;
+    }
+
+    public int getCvv() {
+        return cvv;
+    }
+
     public boolean charge(double amount){
         // call this anytime a card is charged
         System.out.print("Card Number " + this.number + " was charged $" + amount +".");

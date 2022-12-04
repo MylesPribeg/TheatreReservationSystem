@@ -11,9 +11,22 @@ public class DatabaseController{
     public static void main(String[] args) {
         System.out.println("email exists: " + emailExists("dave@gmail.com"));
         System.out.println("ru: " + RUExists("dave@gmail.com", "password123"));
-        System.out.println(getRU("dave@gmail.com").getPassword());
+        //System.out.println(getRU("dave@gmail.com").getPassword());
         System.out.println("movie exists: " + movieExists("Top Gun: Maverick"));
         System.out.println("movie removed: " + removeMovie("my movie"));
+        System.out.println("\n- adding movie:");
+        Movie movie = new Movie("Smile", "Chinook Theatre", "Horror", true);
+        System.out.printf("successfully created movie %s: %b\n", movie.getTitle(), addMovie(movie));
+        System.out.printf("movie %s exists: %s\n", movie.getTitle(), movieExists(movie.getTitle()));
+        System.out.println("\n--all movies:");
+        getAllMovies();
+        System.out.println("\n- removing movie:");
+        System.out.printf("successfully removed movie %s: %b\n", movie.getTitle(), removeMovie(movie.getTitle()));
+
+        System.out.println("\n--all movies:");
+        getAllMovies();
+
+        System.out.println("\n--all showtimes:");
         getAllShowtimes();
         System.out.println("\n--public showtimes:");
         getPublicShowtimes();
@@ -24,7 +37,7 @@ public class DatabaseController{
         System.out.println("\n-all theaters:");
         getAllTheaters();
         System.out.println("\n-taken seats:");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
         String dateInString = "2022-12-05 20:45:00";
         Date date = null;
@@ -34,18 +47,20 @@ public class DatabaseController{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
         Showtime t = new Showtime(date, "a", "a", "a");
-        System.out.println("main showtime date: " + t.getTime());
         getTakenSeats(t);
 
-        Ticket ticket = new Ticket(5, "B3", date, "3", "Chinook Theatre");
-
+        //Ticket ticket = new Ticket(5, "B3", date, "3", "Chinook Theatre");
         //addTicket(ticket);
 
         //addPurchase("dave@gmail.com", 20.00);
+
         System.out.println("\n- purchased tickets");
         String dave = "dave@gmail.com";
         getPurchasedTickets(dave);
+
+        System.out.println("\n- credit");
         System.out.println("credit: " +  getUserCredit(dave));
         System.out.println("refunding $20.01");
         addCredit(dave, 20.01);
@@ -54,17 +69,68 @@ public class DatabaseController{
         subtractCredits(dave, 9.99);
         System.out.println("credit: " +  getUserCredit(dave));
 
+        System.out.println("\n add/remove registered user:");
         String email = "jackbarrrie@outlok.com";
-        System.out.println("email exists: " + emailExists(email));
+        System.out.println("user exists: " + userExists(email));
+        System.out.println("ru exists: " + emailExists(email));
         System.out.println("ru: " + RUExists(email, "12345"));
         RegisteredUser user = new RegisteredUser(email, "12345", new Name("pierre", "b", "bourne"),
             "an andress", new CreditCard("td", "1111 1111 1111 1111", 0327, 444), 0, date);
         System.out.println("created new ru: " + addRU(user));
-        System.out.println("email exists: " + emailExists(email));
+        System.out.println("user exists: " + userExists(email));
+        System.out.println("ru exists: " + emailExists(email));
         System.out.println("ru: " + RUExists(email, "12345"));
         System.out.println("removed ru: " + removeRU(user));
-        System.out.println("email exists: " + emailExists(email));
+        System.out.println("user exists: " + userExists(email));
+        System.out.println("ru exists: " + emailExists(email));
         System.out.println("ru: " + RUExists(email, "12345"));
+
+        System.out.println("\n- admin stuff");
+        Admin a = new Admin("admin@gmail.com", "pass");
+        System.out.printf("created admin %s: %b\n", a.getEmail(), addAdmin(a));
+        System.out.printf("admin %s exists: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
+        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", a.getEmail(), a.getPassword(), verifyAdmin(a));
+        Admin bad = new Admin("admin@gmail.com", "asdbasdas");
+        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", bad.getEmail(), bad.getPassword(), verifyAdmin(bad));
+        Admin d = new Admin("admi@gmail.com", "pass");
+        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", d.getEmail(), d.getPassword(), verifyAdmin(d));
+        System.out.printf("removing admin %s: %b\n", a.getEmail(), removeAdmin(a));
+        System.out.printf("admin %s exits: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
+        System.out.printf("admin %s exits: %b\n", d.getEmail(), adminUserExists(d.getEmail()));
+
+        System.out.println("\n- Update RU Payment Date");
+        addRU(user);
+        {
+            RegisteredUser daveObj = getRU(email);
+            String ruName = daveObj.getName().getNameString();
+            String ruEmail = daveObj.getEmail();
+            String ruPass = daveObj.getPassword();
+            String ruAddy = daveObj.getAddress();
+            String ruLastPayment = convertDateToString(daveObj.getLastPayment());
+            System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
+        }   
+        System.out.println("updating date to currnet date");
+        updatePaymentDate(email);
+        {
+            RegisteredUser daveObj = getRU(email);
+            String ruName = daveObj.getName().getNameString();
+            String ruEmail = daveObj.getEmail();
+            String ruPass = daveObj.getPassword();
+            String ruAddy = daveObj.getAddress();
+            String ruLastPayment = convertDateToString(daveObj.getLastPayment());
+            System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
+        }   
+
+        System.out.println("\n- testing name");
+        Name testName = new Name("first", "", "last");
+        CreditCard testCard = new CreditCard("a", "123123123131", 0, 0);
+        RegisteredUser nameTest = new RegisteredUser("test@b.com", "pass", testName,  "addy", testCard, 0, date);
+        System.out.println("created new user: " + addRU(nameTest));
+        RegisteredUser returnRu = getRU("test@b.com");
+        System.out.println(returnRu.getName().getNameString());
+        System.out.println("first=" + returnRu.getName().getFirst());
+        System.out.println("middlle=" + returnRu.getName().getMiddle());
+        System.out.println("last=" + returnRu.getName().getLast());
        
     }
 
@@ -113,7 +179,35 @@ public class DatabaseController{
 
     // check database for Admin with given username and password
     public static boolean verifyAdmin(Admin a){
-        return false;
+        boolean adminExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT * FROM admin WHERE email = ? AND password = ?");
+            statement.setString(1, a.getEmail());
+            statement.setString(2, a.getPassword());
+
+            result = statement.executeQuery();
+
+            adminExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return adminExists;
     }
 
     //verify that there is a RU with given email and password
@@ -182,17 +276,19 @@ public class DatabaseController{
                 double credit = result.getDouble(5);
                 CreditCard card = new CreditCard(result.getString(6), result.getString(7),
                     result.getInt(8), result.getInt(9));
-                Date signup = result.getDate(10);
+                Date signup = result.getTimestamp(10);
 
                 String[] nm = name.split(" ", 3);
                 Name ruName = new Name(nm[0], nm[1], nm[2]);
 
                 ru = new RegisteredUser(ruEmail, password, ruName, address, card, credit, signup);
 
+            } else {
+                System.out.println("couldnt get user from database");
             }
 
         } catch (Exception e) {
-
+            
             e.printStackTrace();
 
         } finally {
@@ -204,6 +300,38 @@ public class DatabaseController{
         return ru;
     }
 
+    public static boolean userExists(String email) {
+        boolean userExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT email FROM user " +
+            "WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            userExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return userExists;
+    }
+
     //add registered user to database
     //return true for success
     public static boolean addRU(RegisteredUser ru){
@@ -213,24 +341,27 @@ public class DatabaseController{
         ResultSet result = null;
         PreparedStatement statement1 = null;
         PreparedStatement statement2 = null;
+        PreparedStatement statement3 = null;
 
         try {
 
             con = DatabaseController.getConnection();
 
-            statement1 = con.prepareStatement("INSERT INTO user(email, credits) VALUES (?, ?)");
+            //create new user if it doesnt exist
+            if(!userExists(ru.getEmail())) {
+                statement1 = con.prepareStatement("INSERT INTO user(email, credits) VALUES (?, ?)");
 
-            statement1.setString(1, ru.getEmail());
-            statement1.setDouble(2, 0.00);
+                statement1.setString(1, ru.getEmail());
+                statement1.setDouble(2, 0.00);
 
-            int newRows = statement1.executeUpdate();
+                int newRows = statement1.executeUpdate();
 
-            if (newRows == 0) {
-                //throw new SQLException("couldnt create user");
-                return false;
+                if (newRows == 0) {
+                    //throw new SQLException("couldnt create user");
+                    return false;
+                }
             }
-            
-          
+
             statement2 = con.prepareStatement("INSERT INTO registered_user(password, name, address, email) " +
                 "VALUES (?, ?, ?, ?)");
 
@@ -239,7 +370,25 @@ public class DatabaseController{
             statement2.setString(3, ru.getAddress());
             statement2.setString(4, ru.getEmail());
 
-            newRows = statement2.executeUpdate();
+            int newRows = statement2.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create registered user");
+                return false;
+            }
+
+            statement3 = con.prepareStatement("INSERT INTO credit_card(ru_email, company, number, expiry, cvv) " +
+                "VALUES (?, ?, ?, ?, ?)");
+
+            CreditCard card = ru.getCreditCard();
+
+            statement3.setString(1, ru.getEmail());
+            statement3.setString(2, card.getCompany());
+            statement3.setString(3, card.getNumber());
+            statement3.setInt(4, card.getExpiryDate());
+            statement3.setInt(5, card.getCvv());
+
+            newRows = statement3.executeUpdate();
 
             if (newRows == 0) {
                 //throw new SQLException("couldnt create registered user");
@@ -248,8 +397,8 @@ public class DatabaseController{
             
             success = true;
         } catch (Exception e) {
-
-            e.printStackTrace();
+            System.out.println("error adding ru to database");
+            //e.printStackTrace();
 
         } finally {
             try {if (statement1 != null) statement1.close();} catch(Exception e) {e.printStackTrace();}
@@ -292,17 +441,117 @@ public class DatabaseController{
 
     //adds Admin to database
     public static boolean addAdmin(Admin a){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement1 = null;
+        PreparedStatement statement2 = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            //create new user if it doesnt exist
+            if(!userExists(a.getEmail())) {
+                statement1 = con.prepareStatement("INSERT INTO user(email, credits) VALUES (?, ?)");
+
+                statement1.setString(1, a.getEmail());
+                statement1.setDouble(2, 0.00);
+
+                int newRows = statement1.executeUpdate();
+
+                if (newRows == 0) {
+                    //throw new SQLException("couldnt create user");
+                    return false;
+                }
+            }
+
+            statement2 = con.prepareStatement("INSERT INTO admin(email, password) VALUES (?, ?)");
+
+            statement2.setString(1, a.getEmail());
+            statement2.setString(2, a.getPassword());
+            
+            int newRows = statement2.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create admin");
+                return false;
+            }
+            
+            success = true;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement1 != null) statement1.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (statement2 != null) statement2.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return success;
     }
 
     //check if admin email exists
     public static boolean adminUserExists(String email){
-        return false;
+        boolean userExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT email FROM admin WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            userExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return userExists;
     }
 
     //remove admin from database
     public static boolean removeAdmin(Admin a){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("DELETE FROM admin WHERE email = ?");
+            statement.setString(1, a.getEmail());
+
+            success = statement.executeUpdate() > 0 ? true : false; 
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
+
+        return success;
     }
 
     //check if movie exists
@@ -340,7 +589,44 @@ public class DatabaseController{
 
     //add movie
     public static boolean addMovie(Movie movie){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("INSERT INTO movie(name, theatre, publicly_available, genre) " +
+            "VALUES (?, ?, ?, ?)");
+
+            statement.setString(1, movie.getTitle());
+            statement.setString(2, movie.getTheatre());
+            statement.setBoolean(3, movie.getPubliclyAvailabe());
+            statement.setString(4, movie.getGenre());
+
+            int newRows = statement.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create user");
+                return false;
+            }
+
+            success = true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return success;
     }
 
     //remove movie
@@ -406,7 +692,7 @@ public class DatabaseController{
 
             while (result.next()) 
             {
-                Date date = result.getDate(1);
+                Date date = result.getTimestamp(1);
                 String roomNo = String.valueOf(result.getInt(2));
                 String theatre = result.getString(3);
                 String movie = result.getString(4);
@@ -415,7 +701,7 @@ public class DatabaseController{
 
                 showtimes.add(temp);
 
-                System.out.printf("%s, %s, %s, %s\n", date.toString(), roomNo, theatre, movie);
+                System.out.printf("%s, %s, %s, %s\n", convertDateToString(date), roomNo, theatre, movie);
             }
 
         } catch (Exception e) {
@@ -454,7 +740,7 @@ public class DatabaseController{
 
             while (result.next()) 
             {
-                Date date = result.getDate(1);
+                Date date = result.getTimestamp(1);
                 String roomNo = String.valueOf(result.getInt(2));
                 String theatre = result.getString(3);
                 String movie = result.getString(4);
@@ -463,7 +749,7 @@ public class DatabaseController{
 
                 showtimes.add(temp);
                 
-                System.out.printf("%s, %s, %s, %s\n", date.toString(), roomNo, theatre, movie);
+                System.out.printf("%s, %s, %s, %s\n", convertDateToString(date), roomNo, theatre, movie);
             }
 
         } catch (Exception e) {
@@ -740,6 +1026,9 @@ public class DatabaseController{
             statement.setInt(1, t.getTicketId());
 
             int numRowsDeleted = statement.executeUpdate();
+            if (numRowsDeleted == 0) {
+                //throw new SQLException("ticket doesnt exist");
+            }
 
         } catch (Exception e) {
 
@@ -778,7 +1067,7 @@ public class DatabaseController{
                 int id = result.getInt("ticket_id");
                 int purchase_id = result.getInt("id_purchase");
                 String seat_no = result.getString("seat_no");
-                Date time = result.getDate("purchase_date");
+                Date time = result.getTimestamp("purchase_date");
                 String showroom = String.valueOf(result.getInt("room_no"));
                 String theatre = result.getString("theatre");
 
@@ -867,11 +1156,64 @@ public class DatabaseController{
     }
 
     public static void updatePaymentDate(String email){
-        // sets the last payment date of this user to the current date
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("UPDATE registered_user SET signup_date = ? WHERE email = ?");
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+            // String dateInString = "2022-12-05 20:45:00";
+            // Date date = null;
+            // try {
+            // date = formatter.parse(dateInString);
+            // } catch (ParseException e) {
+            //     // TODO Auto-generated catch block
+            //     e.printStackTrace();
+            // }
+
+            Date date = new Date();
+            String strDate = convertDateToString(date);
+            System.out.println("update last payment: " + strDate);
+            statement.setTimestamp(1, java.sql.Timestamp.valueOf(strDate));
+
+            statement.setString(2, email);
+
+            int numRows = statement.executeUpdate();
+
+            if (numRows == 0) {
+                //throw new SQLException("error updating payment date");
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
     }
 
     private static String convertDateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
         return dateFormat.format(date);  
+    }
+
+    private static Date convertStringToDate(String dateString) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+        Date date = null;
+        try {
+           date = formatter.parse(dateString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return date;
     }
 }
