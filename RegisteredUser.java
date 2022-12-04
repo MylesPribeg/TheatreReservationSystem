@@ -1,4 +1,4 @@
-import java.time.LocalDate;
+import java.util.Date;
 
 public class RegisteredUser extends User{
     private String email;
@@ -7,11 +7,11 @@ public class RegisteredUser extends User{
     private Name name;
     private double credit;
     private CreditCard card;
-    private LocalDate lastPayment;
+    private Date lastPayment;
 
     public RegisteredUser(String email, String password, 
             String firstName, String middleName, String lastName,
-            String address, String company, int cardNumber, int cardExpiryDate, int cvv, LocalDate curr_date)
+            String address, String company, int cardNumber, int cardExpiryDate, int cvv, java.sql.Date curr_date)
     {
         this.email = email;
         this.password = password;
@@ -31,14 +31,10 @@ public class RegisteredUser extends User{
 
     public boolean checkMemberExpired(){
         // returns true if this user's membership has expired and their fee must be paid
-        LocalDate today = LocalDate.now();
-        int yearDif = today.getYear() - this.lastPayment.getYear();
-        if (yearDif == 1){
-            if (today.getDayOfYear() - this.lastPayment.getDayOfYear() >= 0){
-                return true;
-            }
-        }
-        else if (yearDif >= 2){
+        java.util.Date curDate = new java.util.Date();
+
+        long year = Long.parseUnsignedLong("31536000000");
+        if (curDate.getTime() - lastPayment.getTime() >= year){
             return true;
         }
         return false;
@@ -47,6 +43,7 @@ public class RegisteredUser extends User{
 
     public boolean payMemberFee(){
         // is called by GUI if RU fee is required, returns true if fee is paid
+        DatabaseController.updatePaymentDate(email);
         return this.card.charge(20.00);
     }
 }

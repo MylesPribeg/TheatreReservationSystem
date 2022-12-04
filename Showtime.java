@@ -2,16 +2,14 @@ import java.time.LocalDateTime;
 
 public class Showtime {
     
-    private int id;
     private LocalDateTime time;
     private String theaterName;
     private String movieName;
     private String roomName;
 
-    public Showtime(int id, LocalDateTime time, String theaterName, 
+    public Showtime(LocalDateTime time, String theaterName, 
             String movieName, String roomName)
     {
-        this.id = id;
         this.time = time;
         this.theaterName = theaterName;
         this.movieName = movieName;

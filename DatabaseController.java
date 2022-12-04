@@ -137,5 +137,12 @@ public class DatabaseController{
         return null;
     }
 
-    
+    public static void addCredit(String email, double amount){
+        // adds amount to the credit of user with this email
+        return;
+    }
+
+    public static void updatePaymentDate(String email){
+        // sets the last payment date of this user to the current date
+    }
 }

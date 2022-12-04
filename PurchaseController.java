@@ -27,7 +27,7 @@ public class PurchaseController {
         return card.charge(price);
     }
 
-    public void purchaseSeats(String email, ArrayList<Seat> seats, CreditCard card){
+    public void purchaseSeats(String email, ArrayList<Seat> seats){
         // at this point, users card has already been charged
 
         Purchase newPurchase = addTicketPurchase(email, seats.size());
