@@ -109,12 +109,25 @@ public class DatabaseController{
         return null;
     }
 
-    // PURCHASE STUFF
+    // SEAT STUFF
 
-    // make a purchase
-    public static void makePurchase(Purchase p){
-        // add a purchase to database
-        // create add all tickets of purchase to the database
+    public static ArrayList<Seat> getTakenSeats(Showtime showtime){
+        return null;
+    }
+
+    //return the completed purchase object with id + date
+    public static Purchase addPurchase(String email, double cost){
+        return null;
+    }
+
+    //adds a ticket to the Ticket table in database
+    public static void addTicket(Ticket ticket){
+        return;
+    }
+
+    // remove ticket
+    public static void removeTicket(Ticket t){
+        // remove ticket from database
     }
 
     // get purchase
@@ -122,11 +135,6 @@ public class DatabaseController{
         // search database for all purchases under the given email
         // return list of all tickets
         return null;
-    }
-
-    // remove ticket
-    public static void removeTicket(Ticket t){
-        // remove ticket from database
     }
 
     
