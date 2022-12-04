@@ -12,7 +12,7 @@ public class LoginController{
     }
 
     //check if a RU already has given email
-    public static boolean emailExists(String email){
+    public boolean emailExists(String email){
 
         if(DatabaseController.emailExists(email)){
             return true;
@@ -21,7 +21,7 @@ public class LoginController{
     }
 
     //verify Admin login
-    public static boolean verifyAdmin(Admin a){
+    public boolean verifyAdmin(Admin a){
         
         if (DatabaseController.verifyAdmin(a))
             return true;
@@ -32,7 +32,7 @@ public class LoginController{
     
     //return RU object if RU correctly gives email and password
     //otherwise return null
-    public static RegisteredUser RUSignIn(String email, String password){
+    public RegisteredUser RUSignIn(String email, String password){
         
         //check RU database for user with email and password
         if(DatabaseController.RUExists(email, password)){
@@ -43,13 +43,13 @@ public class LoginController{
     }
 
     //create generic user object for guest
-    public static User guestSignIn(){
+    public User guestSignIn(){
         return new User();
     }
 
     //adds registeredUser to database and returns true on success
     //if email is already in use, returns false
-    public static boolean registerUser(RegisteredUser ru){
+    public boolean registerUser(RegisteredUser ru){
         
         // check if email already exists
         if(DatabaseController.emailExists(ru.getEmail())){
@@ -63,7 +63,7 @@ public class LoginController{
 
     //checks if Admin login is valid
     //return Admin object if valid, otherwise returns null
-    public static boolean adminSignIn(Admin a){
+    public boolean adminSignIn(Admin a){
 
         if (verifyAdmin(a)){
             return true;
