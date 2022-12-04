@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.sql.Date;
 
 public class Purchase {
     private int purchase_id;
     private String buyer_email;
     private double cost;
-    private ArrayList<Ticket> tickets;
+    private Date dateOfPurchase;
 
     public Purchase(int id, String email, double amount){
         purchase_id = id;
@@ -12,8 +13,9 @@ public class Purchase {
         cost = amount;
     }
 
-    public void addTicket(Ticket t){
-        this.tickets.add(t);
+    public Purchase(String email, double cost){
+        this.buyer_email = email;
+        this.cost = cost;
     }
 
     public int getID(){
@@ -27,4 +29,6 @@ public class Purchase {
     public double getAmount(){
         return cost;
     }
+
+    public Date getDate(){return this.dateOfPurchase;}
 }
