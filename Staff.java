@@ -1,13 +1,13 @@
 public class Staff{
-    private Name name;
+    private String name;
     private String jobTitle;
 
-    public Staff(String firstName, String middleName, String lastName, String jobTitle){
-        this.name = new Name(firstName, middleName, lastName);
+    public Staff(String name, String jobTitle){
+        this.name = name;
         this.jobTitle = jobTitle;
     }
 
-    public Name getName(){
+    public String getName(){
         return name;
     }
 

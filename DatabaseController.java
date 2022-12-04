@@ -74,7 +74,7 @@ public class DatabaseController{
         System.out.println("user exists: " + userExists(email));
         System.out.println("ru exists: " + emailExists(email));
         System.out.println("ru: " + RUExists(email, "12345"));
-        RegisteredUser user = new RegisteredUser(email, "12345", new Name("pierre", "b", "bourne"),
+        RegisteredUser user = new RegisteredUser(email, "12345", "pierre b borne",
             "an andress", new CreditCard("td", "1111 1111 1111 1111", 0327, 444), 0, date);
         System.out.println("created new ru: " + addRU(user));
         System.out.println("user exists: " + userExists(email));
@@ -102,7 +102,7 @@ public class DatabaseController{
         addRU(user);
         {
             RegisteredUser daveObj = getRU(email);
-            String ruName = daveObj.getName().getNameString();
+            String ruName = daveObj.getName();
             String ruEmail = daveObj.getEmail();
             String ruPass = daveObj.getPassword();
             String ruAddy = daveObj.getAddress();
@@ -113,7 +113,7 @@ public class DatabaseController{
         updatePaymentDate(email);
         {
             RegisteredUser daveObj = getRU(email);
-            String ruName = daveObj.getName().getNameString();
+            String ruName = daveObj.getName();
             String ruEmail = daveObj.getEmail();
             String ruPass = daveObj.getPassword();
             String ruAddy = daveObj.getAddress();
@@ -122,15 +122,12 @@ public class DatabaseController{
         }   
 
         System.out.println("\n- testing name");
-        Name testName = new Name("first", "", "last");
+        String testName = "first last";
         CreditCard testCard = new CreditCard("a", "123123123131", 0, 0);
         RegisteredUser nameTest = new RegisteredUser("test@b.com", "pass", testName,  "addy", testCard, 0, date);
         System.out.println("created new user: " + addRU(nameTest));
         RegisteredUser returnRu = getRU("test@b.com");
-        System.out.println(returnRu.getName().getNameString());
-        System.out.println("first=" + returnRu.getName().getFirst());
-        System.out.println("middlle=" + returnRu.getName().getMiddle());
-        System.out.println("last=" + returnRu.getName().getLast());
+        System.out.println(returnRu.getName());
        
     }
 
@@ -270,16 +267,13 @@ public class DatabaseController{
             if (result.next()) {
 
                 String password = result.getString(1);
-                String name = result.getString(2);
+                String ruName = result.getString(2);
                 String ruEmail = result.getString(3);
                 String address = result.getString(4);
                 double credit = result.getDouble(5);
                 CreditCard card = new CreditCard(result.getString(6), result.getString(7),
                     result.getInt(8), result.getInt(9));
                 Date signup = result.getTimestamp(10);
-
-                String[] nm = name.split(" ", 3);
-                Name ruName = new Name(nm[0], nm[1], nm[2]);
 
                 ru = new RegisteredUser(ruEmail, password, ruName, address, card, credit, signup);
 
@@ -366,7 +360,7 @@ public class DatabaseController{
                 "VALUES (?, ?, ?, ?)");
 
             statement2.setString(1, ru.getPassword());
-            statement2.setString(2, ru.getName().getNameString());
+            statement2.setString(2, ru.getName());
             statement2.setString(3, ru.getAddress());
             statement2.setString(4, ru.getEmail());
 

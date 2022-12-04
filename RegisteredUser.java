@@ -4,24 +4,24 @@ public class RegisteredUser extends User{
     private String email;
     private String password;
     private String address;
-    private Name name;
+    private String name;
     private CreditCard card;
     private Date lastPayment;
 
     public RegisteredUser(String email, String password, 
-            String firstName, String middleName, String lastName,
+            String name,
             String address, String company, String cardNumber, int cardExpiryDate, int cvv, java.sql.Date curr_date)
     {
         this.email = email;
         this.password = password;
-        this.name = new Name(firstName, middleName, lastName);
+        this.name = name;
         this.card = new CreditCard(company, cardNumber, cardExpiryDate, cvv);
         this.credit = 0;
         this.lastPayment = curr_date;
     }
 
     public RegisteredUser(String email, String password, 
-        Name name, String address, CreditCard card, double credit, Date date) 
+        String name, String address, CreditCard card, double credit, Date date) 
         {
             this.email = email;
             this.password = password;
@@ -33,24 +33,16 @@ public class RegisteredUser extends User{
         }
     
     
-    public CreditCard getCreditCard() {
-        return card;
-    }
-    public String getEmail(){
-        return email;
-    }
+    public CreditCard getCreditCard() {return card;}
+    public String getEmail(){return email;}
+    public String getName() {return name;}
+    public String getAddress() {return address;}
+    public String getPassword(){return password;}
 
-    public Name getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPassword(){
-        return password;
-    }
+    public void setEmail(String email){this.email = email;}
+    public void setName(String name){this.name = name;}
+    public void setAddress(String address){this.address = address;}
+    public void setCreditCard(CreditCard card){this.card = card;}
 
     public Date getLastPayment() {
         return lastPayment;
