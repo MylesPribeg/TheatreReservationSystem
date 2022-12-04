@@ -1,10 +1,10 @@
 public class CreditCard{
     private String company;
-    private int number;
+    private String number;
     private int expiryDate;
     private int cvv;
 
-    public CreditCard(String company, int number, int expiryDate, int cvv){
+    public CreditCard(String company, String number, int expiryDate, int cvv){
         this.company = company;
         this.number = number;
         this.expiryDate = expiryDate;

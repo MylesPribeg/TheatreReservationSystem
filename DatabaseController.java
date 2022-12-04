@@ -1,13 +1,114 @@
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class DatabaseController{
+    
+    public static void main(String[] args) {
+        System.out.println("email exists: " + emailExists("dave@gmail.com"));
+        System.out.println("ru: " + RUExists("dave@gmail.com", "password123"));
+        System.out.println(getRU("dave@gmail.com").getPassword());
+        System.out.println("movie exists: " + movieExists("Top Gun: Maverick"));
+        System.out.println("movie removed: " + removeMovie("my movie"));
+        getAllShowtimes();
+        System.out.println("\n--public showtimes:");
+        getPublicShowtimes();
+        System.out.println("\n-public movies");
+        getPublicMovies();
+        System.out.println("\n--all movies:");
+        getAllMovies();
+        System.out.println("\n-all theaters:");
+        getAllTheaters();
+        System.out.println("\n-taken seats:");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
 
+        String dateInString = "2022-12-05 20:45:00";
+        Date date = null;
+        try {
+           date = formatter.parse(dateInString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Showtime t = new Showtime(date, "a", "a", "a");
+        System.out.println("main showtime date: " + t.getTime());
+        getTakenSeats(t);
+
+        Ticket ticket = new Ticket(5, "B3", date, "3", "Chinook Theatre");
+
+        //addTicket(ticket);
+
+        //addPurchase("dave@gmail.com", 20.00);
+        System.out.println("\n- purchased tickets");
+        String dave = "dave@gmail.com";
+        getPurchasedTickets(dave);
+        System.out.println("credit: " +  getUserCredit(dave));
+        System.out.println("refunding $20.01");
+        addCredit(dave, 20.01);
+        System.out.println("credit: " +  getUserCredit(dave));
+        System.out.println("purchase $9.99");
+        subtractCredits(dave, 9.99);
+        System.out.println("credit: " +  getUserCredit(dave));
+
+        String email = "jackbarrrie@outlok.com";
+        System.out.println("email exists: " + emailExists(email));
+        System.out.println("ru: " + RUExists(email, "12345"));
+        RegisteredUser user = new RegisteredUser(email, "12345", new Name("pierre", "b", "bourne"),
+            "an andress", new CreditCard("td", "1111 1111 1111 1111", 0327, 444), 0, date);
+        System.out.println("created new ru: " + addRU(user));
+        System.out.println("email exists: " + emailExists(email));
+        System.out.println("ru: " + RUExists(email, "12345"));
+        System.out.println("removed ru: " + removeRU(user));
+        System.out.println("email exists: " + emailExists(email));
+        System.out.println("ru: " + RUExists(email, "12345"));
+       
+    }
+
+    private static Connection getConnection() throws ClassNotFoundException, SQLException{
+        Connection con = null;
+
+        con = DriverManager.getConnection("jdbc:mysql://localhost/ensf480", "root", "password");
+        
+        return con;
+    }
 
     //LOGIN STUFF
 
     //check if there is a RU with specified email
     public static boolean emailExists(String email){
-        return false;
+
+        boolean emailExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT email FROM registered_user WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            emailExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return emailExists;
     }
 
     // check database for Admin with given username and password
@@ -17,24 +118,176 @@ public class DatabaseController{
 
     //verify that there is a RU with given email and password
     public static boolean RUExists(String email, String password){
-        return false;
+        boolean ruExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT email FROM registered_user " +
+            "WHERE email = ? AND password = ?");
+            statement.setString(1, email);
+            statement.setString(2, password);
+
+            result = statement.executeQuery();
+
+            ruExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return ruExists;
     }
 
     //return Registered User object with given email
     public static RegisteredUser getRU(String email){
-        return null;
+        RegisteredUser ru = null;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement(
+            "SELECT password, name, user.email, address, credits, company, number, expiry, cvv, signup_date " +
+            "FROM registered_user " + 
+            "INNER JOIN user ON registered_user.email = user.email " +
+            "INNER JOIN credit_card ON registered_user.email = credit_card.ru_email " +
+            "WHERE user.email = ?");
+
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            if (result.next()) {
+
+                String password = result.getString(1);
+                String name = result.getString(2);
+                String ruEmail = result.getString(3);
+                String address = result.getString(4);
+                double credit = result.getDouble(5);
+                CreditCard card = new CreditCard(result.getString(6), result.getString(7),
+                    result.getInt(8), result.getInt(9));
+                Date signup = result.getDate(10);
+
+                String[] nm = name.split(" ", 3);
+                Name ruName = new Name(nm[0], nm[1], nm[2]);
+
+                ru = new RegisteredUser(ruEmail, password, ruName, address, card, credit, signup);
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return ru;
     }
 
     //add registered user to database
     //return true for success
     public static boolean addRU(RegisteredUser ru){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement1 = null;
+        PreparedStatement statement2 = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement1 = con.prepareStatement("INSERT INTO user(email, credits) VALUES (?, ?)");
+
+            statement1.setString(1, ru.getEmail());
+            statement1.setDouble(2, 0.00);
+
+            int newRows = statement1.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create user");
+                return false;
+            }
+            
+          
+            statement2 = con.prepareStatement("INSERT INTO registered_user(password, name, address, email) " +
+                "VALUES (?, ?, ?, ?)");
+
+            statement2.setString(1, ru.getPassword());
+            statement2.setString(2, ru.getName().getNameString());
+            statement2.setString(3, ru.getAddress());
+            statement2.setString(4, ru.getEmail());
+
+            newRows = statement2.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create registered user");
+                return false;
+            }
+            
+            success = true;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement1 != null) statement1.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (statement2 != null) statement2.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return success;
     }
 
     //remove RU from database
     //return false if failed
     public static boolean removeRU(RegisteredUser ru){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("DELETE FROM registered_user WHERE email = ?");
+            statement.setString(1, ru.getEmail());
+
+            success = statement.executeUpdate() > 0 ? true : false; 
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
+
+        return success;
     }
 
     //adds Admin to database
@@ -53,8 +306,36 @@ public class DatabaseController{
     }
 
     //check if movie exists
-    public static boolean movieExists(Movie movie){
-        return false;
+    public static boolean movieExists(String movie){
+        boolean movieExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT name FROM movie " +
+            "WHERE name = ?");
+            statement.setString(1, movie);
+
+            result = statement.executeQuery();
+
+            movieExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+                try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+                try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+                try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();} 
+        }
+
+        return movieExists;
     }
 
     //add movie
@@ -63,8 +344,31 @@ public class DatabaseController{
     }
 
     //remove movie
-    public static boolean removeMovie(Movie movie){
-        return false;
+    public static boolean removeMovie(String movie){
+        boolean success = false;
+
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("DELETE FROM movie WHERE name = ?");
+            statement.setString(1, movie);
+
+            success = statement.executeUpdate() > 0 ? true : false; 
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
+
+        return success;
     }
 
     //check if staff member exists
@@ -86,73 +390,488 @@ public class DatabaseController{
 
     //returns list of all showtime objects
     public static ArrayList<Showtime> getAllShowtimes(){
-        return null;
+        ArrayList<Showtime> showtimes = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT * FROM show_time");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                Date date = result.getDate(1);
+                String roomNo = String.valueOf(result.getInt(2));
+                String theatre = result.getString(3);
+                String movie = result.getString(4);
+
+                Showtime temp = new Showtime(date, theatre, movie, roomNo);
+
+                showtimes.add(temp);
+
+                System.out.printf("%s, %s, %s, %s\n", date.toString(), roomNo, theatre, movie);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return showtimes;
     }
 
     //returns list of all showtime objects with public movies
     public static ArrayList<Showtime> getPublicShowtimes(){
-        return null;
+        ArrayList<Showtime> showtimes = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement(
+            "SELECT show_time.date, show_time.room_no, "+
+            "show_time.theatre, show_time.movie " +
+            "FROM show_time " + 
+            "INNER JOIN movie ON show_time.movie = movie.name " +
+            "WHERE movie.publicly_available = '1'");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                Date date = result.getDate(1);
+                String roomNo = String.valueOf(result.getInt(2));
+                String theatre = result.getString(3);
+                String movie = result.getString(4);
+
+                Showtime temp = new Showtime(date, theatre, movie, roomNo);
+
+                showtimes.add(temp);
+                
+                System.out.printf("%s, %s, %s, %s\n", date.toString(), roomNo, theatre, movie);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return showtimes;
     }
 
     //returns list of strings of all public movie titles
     public static ArrayList<String> getPublicMovies(){
-        return null;
+        ArrayList<String> movies = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT name FROM movie WHERE publicly_available = '1'");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                String movie = result.getString(1);
+
+                movies.add(movie);
+                
+                System.out.println(movie);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return movies;
     }
 
     //returns list of strings of all movie titles
     public static ArrayList<String> getAllMovies(){
-        return null;
+        ArrayList<String> movies = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT name FROM movie");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                String movie = result.getString(1);
+
+                movies.add(movie);
+                
+                System.out.println(movie);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return movies;
     }
 
     //returns list of strings of all theaters
     public static ArrayList<String> getAllTheaters(){
-        return null;
+        ArrayList<String> theaters = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT name FROM theatre");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                String name = result.getString(1);
+
+                theaters.add(name);
+                
+                System.out.println(name);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return theaters;
     }
 
     // SEAT STUFF
 
     public static ArrayList<Seat> getTakenSeats(Showtime showtime){
-        return null;
+        ArrayList<Seat> seats = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement(
+            "SELECT ticket.seat_no, ticket.room_no FROM ticket " +
+            "INNER JOIN show_time ON show_time.date = ticket.show_date AND show_time.room_no = ticket.room_no " +
+            "INNER JOIN show_room ON ticket.room_no = show_room.room_number AND ticket.theatre = show_room.theatre " +
+            "WHERE show_time.date = ?");
+
+            //format showtime date for sql 
+            String strDate = convertDateToString(showtime.getTime());
+            statement.setTimestamp(1, java.sql.Timestamp.valueOf(strDate));
+
+            result = statement.executeQuery();
+            
+            while (result.next()) 
+            {
+                String seatNo = result.getString(1);
+                String roomNo = String.valueOf(result.getInt(2));
+
+                seats.add(new Seat(seatNo, roomNo));
+                
+                System.out.printf("%s, %s\n", seatNo, roomNo);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return seats;
     }
 
     //return the completed purchase object with id + date
     public static Purchase addPurchase(String email, double cost){
-        return null;
+        Purchase purchase = null;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("INSERT INTO purchase(email, cost) " +
+                "VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+            statement.setString(1, email);
+            statement.setDouble(2, cost);
+
+            int newRows = statement.executeUpdate();
+
+            if (newRows == 0) {
+                //throw new SQLException("couldnt create purchase");
+            }
+
+            int id = -1;
+            try(ResultSet rs = statement.getGeneratedKeys()) {
+                if (rs.next()) {
+                    id = rs.getInt(1);
+                    System.out.println("purchase no: " + id);
+                }
+            }
+
+            purchase = new Purchase(id, email, cost);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return purchase;
     }
 
     //adds a ticket to the Ticket table in database
     public static void addTicket(Ticket ticket){
-        return;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement(
+                "INSERT INTO ticket(seat_no, show_date, room_no, price, purchase_no, theatre) " +
+                "VALUES (?, ?, ?, ?, ?, ?)");
+
+            statement.setString(1, ticket.getSeat());
+            statement.setTimestamp(2, java.sql.Timestamp.valueOf(convertDateToString(ticket.getTime())));
+            statement.setInt(3, Integer.parseInt(ticket.getShowroom()));
+            statement.setDouble(4, ticket.getPrice());
+            statement.setInt(5, ticket.getPurchaseId());
+            statement.setString(6, ticket.getTheatre());
+
+            int newRows = statement.executeUpdate();
+            System.out.println("created " + newRows + " tickets");
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
     }
 
     // remove ticket
     public static void removeTicket(Ticket t){
-        // remove ticket from database
+
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("DELETE FROM ticket WHERE ticket_id = ?");
+            statement.setInt(1, t.getTicketId());
+
+            int numRowsDeleted = statement.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
+
     }
 
     // get purchase
     public static ArrayList<Ticket> getPurchasedTickets(String email){
-        // search database for all purchases under the given email
-        // return list of all tickets
-        return null;
+        ArrayList<Ticket> tickets = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement(
+                "SELECT * FROM TICKET " +
+                "INNER JOIN purchase ON ticket.purchase_no = purchase.id_purchase " +
+                "WHERE email = ?");
+            
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {   
+                int id = result.getInt("ticket_id");
+                int purchase_id = result.getInt("id_purchase");
+                String seat_no = result.getString("seat_no");
+                Date time = result.getDate("purchase_date");
+                String showroom = String.valueOf(result.getInt("room_no"));
+                String theatre = result.getString("theatre");
+
+                System.out.printf("ticket #%d, purchase #%d, %s, %s, %s, %s\n", id, purchase_id, seat_no, convertDateToString(time), showroom, theatre);
+
+                tickets.add(new Ticket(id, purchase_id, seat_no, time, showroom, theatre));                
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return tickets;
     }
 
     public static void addCredit(String email, double amount){
-        // adds amount to the credit of user with this email
-        return;
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("UPDATE user SET credits = credits + ? WHERE email = ?");
+            statement.setDouble(1, amount);
+            statement.setString(2, email);
+
+            int numRows = statement.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
     }
 
     //get credit for user with given email
     public static double getUserCredit(String email){
-        return -1;
+        double credit = 0.00;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT credits FROM user WHERE email = ?");
+            
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            if (result.next()) {
+                credit = result.getDouble(1);
+            } else {
+                //throw new SQLException();
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return credit;
     }
 
     //subtract credits from user's account
     public static void subtractCredits(String email, double credits){
-        return;
+        addCredit(email, -credits);
     }
 
     public static void updatePaymentDate(String email){
         // sets the last payment date of this user to the current date
+    }
+
+    private static String convertDateToString(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        return dateFormat.format(date);  
     }
 }

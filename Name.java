@@ -8,4 +8,8 @@ public class Name {
         this.middleName = middleName;
         this.lastName = lastName;
     }
+
+    public String getNameString() {
+        return String.format("%s %s %s", firstName, middleName, lastName);
+    }
 }

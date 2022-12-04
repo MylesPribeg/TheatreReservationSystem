@@ -11,7 +11,7 @@ public class RegisteredUser extends User{
 
     public RegisteredUser(String email, String password, 
             String firstName, String middleName, String lastName,
-            String address, String company, int cardNumber, int cardExpiryDate, int cvv, java.sql.Date curr_date)
+            String address, String company, String cardNumber, int cardExpiryDate, int cvv, java.sql.Date curr_date)
     {
         this.email = email;
         this.password = password;
@@ -21,8 +21,28 @@ public class RegisteredUser extends User{
         this.lastPayment = curr_date;
     }
 
+    public RegisteredUser(String email, String password, 
+        Name name, String address, CreditCard card, double credit, Date date) 
+        {
+            this.email = email;
+            this.password = password;
+            this.name = name;
+            this.address = address;
+            this.card = card;
+            this.credit = credit;
+            this.lastPayment = date;
+        }
+
     public String getEmail(){
         return email;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public String getPassword(){
