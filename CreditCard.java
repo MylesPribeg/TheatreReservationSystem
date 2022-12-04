@@ -11,6 +11,13 @@ public class CreditCard{
         this.cvv = cvv;
     }
 
+    public CreditCard(){
+        this.company = null;
+        this.number = null;
+        this.expiryDate = 0;
+        this.cvv = 0;
+    }
+
     public String getCompany() {
         return company;
     }
