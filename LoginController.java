@@ -1,4 +1,15 @@
 public class LoginController{
+    
+    private static LoginController onlyInstance;
+    
+    private LoginController(){}
+    
+    public static LoginController getOnlyInstance(){
+        if(onlyInstance ==null){
+            onlyInstance = new LoginController();
+        }
+        return onlyInstance;
+    }
 
     //check if a RU already has given email
     public static boolean emailExists(String email){
