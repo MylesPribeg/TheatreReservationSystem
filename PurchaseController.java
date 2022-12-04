@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class PurchaseController {
     private Showtime showtime;
+    private double seatCost = 20.00;
 
     public PurchaseController(Showtime showtime){
         this.showtime = showtime;
@@ -11,9 +12,8 @@ public class PurchaseController {
         return DatabaseController.getTakenSeats(showtime);
     }
 
-    public Purchase addTicketPurchase(String email, int numTickets){
-
-        return DatabaseController.addPurchase(email, numTickets*20.00);       
+    public Purchase addTicketPurchase(String email, double cost){
+        return DatabaseController.addPurchase(email, cost);     
     }
 
     public boolean validateCreditCard(CreditCard card){
@@ -21,18 +21,24 @@ public class PurchaseController {
         return true;
     }
 
-    public boolean validatePurchase(CreditCard card, double price){
-        //hypothetically user's bank performs purchase
-        //returns true on success
-        return card.charge(price);
+    public double getTotalCost(String email, int numSeats){
+        return numSeats * seatCost - DatabaseController.getUserCredit(email);
     }
 
-    public void purchaseSeats(String email, ArrayList<Seat> seats){
+    public boolean validatePurchase(CreditCard card, double cost){
+        //hypothetically user's bank performs purchase
+        //returns true on success
+        return card.charge(cost);
+    }
+
+    public void purchaseSeats(String email, ArrayList<Seat> seats, double totalCost){
         // at this point, users card has already been charged
 
-        Purchase newPurchase = addTicketPurchase(email, seats.size());
+        //add purchase object to the database and get the constructed object
+        Purchase newPurchase = addTicketPurchase(email, totalCost);
 
-        //ArrayList<Ticket> tickets = new ArrayList<>();
+        //update User's credit
+        DatabaseController.subtractCredits(email, seats.size() *seatCost - totalCost);
 
         for(Seat seat: seats){
 
@@ -44,9 +50,8 @@ public class PurchaseController {
             
             DatabaseController.addTicket(newTicket);
         }
-
         // send email with tickets
-        EmailController.sendPurchaseReceipt(showtime, email, seats);
+        EmailController.sendPurchaseReceipt(showtime, email, seats, totalCost);
 
     }
     

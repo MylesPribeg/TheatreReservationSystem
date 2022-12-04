@@ -142,6 +142,16 @@ public class DatabaseController{
         return;
     }
 
+    //get credit for user with given email
+    public static double getUserCredit(String email){
+        return -1;
+    }
+
+    //subtract credits from user's account
+    public static void subtractCredits(String email, double credits){
+        return;
+    }
+
     public static void updatePaymentDate(String email){
         // sets the last payment date of this user to the current date
     }
