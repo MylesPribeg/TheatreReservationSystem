@@ -31,7 +31,7 @@ public class PurchaseController {
         return card.charge(cost);
     }
 
-    public void purchaseSeats(String email, ArrayList<Seat> seats, double totalCost){
+    public void purchaseSeats(String email, ArrayList<Seat> seats, double totalCost, String theater){
         // at this point, users card has already been charged
 
         //add purchase object to the database and get the constructed object
@@ -46,7 +46,8 @@ public class PurchaseController {
                     newPurchase.getID(), 
                     seat.getSeatId(),
                     newPurchase.getDate(),
-                    seat.getRoomName());
+                    seat.getRoomName(),
+                    theater);
             
             DatabaseController.addTicket(newTicket);
         }

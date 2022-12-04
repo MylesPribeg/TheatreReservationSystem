@@ -9,15 +9,15 @@ public class Ticket {
     double price;
     String theatre;
     
-    public Ticket(int ticket_id, int purchase_num, String seat_num, Date time, String room, String theatre)
+    public Ticket(int ticket_id, int purchase_id, String seat_id, Date time, String room, String theatre)
     {
-        this(purchase_num, seat_num, time, room, theatre);
+        this(purchase_id, seat_id, time, room, theatre);
         this.id = ticket_id;
     }
 
-    public Ticket(int purchase_num, String seat_num, Date time, String room, String theatre){
-        purchase_id = purchase_num;
-        seat_id = seat_num;
+    public Ticket(int purchase_id, String seat_id, Date time, String room, String theatre){
+        this.purchase_id = purchase_id;
+        this.seat_id = seat_id;
         this.time = time;
         showroom=room;
         this.price = 20.00;

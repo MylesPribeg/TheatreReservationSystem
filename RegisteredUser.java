@@ -5,7 +5,6 @@ public class RegisteredUser extends User{
     private String password;
     private String address;
     private Name name;
-    private double credit;
     private CreditCard card;
     private Date lastPayment;
 

@@ -1,6 +1,6 @@
 public class User {
     protected String email;
-    protected int credit;
+    protected double credit;
     
 
     public User(){
@@ -11,14 +11,8 @@ public class User {
     public String getEmail(){
         return this.email;
     }
-    public int getCredit(){
+    public double getCredit(){
         return this.credit;
     }
     
-    public void cancelTickets(String email){
-        // find purchase under given email
-        // find all tickets with that purchase id
-        
-
-    }
 }
