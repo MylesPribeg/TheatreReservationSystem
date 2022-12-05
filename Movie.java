@@ -1,8 +1,8 @@
 public class Movie{
-    String title;
-    String genre;
-    String theatre;
-    boolean publicly_available;
+    private String title;
+    private String genre;
+    private String theatre;
+    private boolean publicly_available;
 
     public Movie(String title, String theatre, String genre, boolean publicly_available) {
         this.title = title;
