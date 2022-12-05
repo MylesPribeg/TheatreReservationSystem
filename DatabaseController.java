@@ -1125,6 +1125,8 @@ public class DatabaseController{
             statement = con.prepareStatement(
                 "SELECT * FROM TICKET " +
                 "INNER JOIN purchase ON ticket.purchase_no = purchase.id_purchase " +
+                "INNER JOIN show_time ON ticket.show_date = show_time.date AND show_time.room_no = ticket.room_no " +
+                "AND ticket.theatre = show_time.theatre " +
                 "WHERE email = ?");
             
             statement.setString(1, email);
@@ -1139,10 +1141,11 @@ public class DatabaseController{
                 Date time = result.getTimestamp("purchase_date");
                 String showroom = String.valueOf(result.getInt("room_no"));
                 String theatre = result.getString("theatre");
+                String movie = result.getString("movie");
 
-                System.out.printf("ticket #%d, purchase #%d, %s, %s, %s, %s\n", id, purchase_id, seat_no, convertDateToString(time), showroom, theatre);
+                System.out.printf("ticket #%d, purchase #%d, %s, %s, %s, %s, %s\n", id, purchase_id, seat_no, convertDateToString(time), showroom, theatre, movie);
 
-                tickets.add(new Ticket(id, purchase_id, seat_no, time, showroom, theatre));                
+                tickets.add(new Ticket(id, purchase_id, seat_no, time, showroom, theatre, movie));                
             }
 
         } catch (Exception e) {
