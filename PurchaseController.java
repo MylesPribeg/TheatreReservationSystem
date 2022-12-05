@@ -31,8 +31,15 @@ public class PurchaseController {
         return card.charge(cost);
     }
 
-    public void purchaseSeats(String email, ArrayList<Seat> seats, double totalCost, String theater){
+    //returns false if there are over 10% seats being purchased for a non-public movie
+    public boolean purchaseSeats(String email, ArrayList<Seat> seats, double totalCost, String theater){
         // at this point, users card has already been charged
+
+        if(DatabaseController.moviePubliclyAvailable(showtime.getMovieName())){
+            if(DatabaseController.getTakenSeats(showtime).size()>8){
+                return false;
+            }
+        }
 
         //add purchase object to the database and get the constructed object
         Purchase newPurchase = addTicketPurchase(email, totalCost);
