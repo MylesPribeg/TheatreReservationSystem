@@ -35,7 +35,7 @@ public class PurchaseController {
     public boolean purchaseSeats(String email, ArrayList<Seat> seats, double totalCost, String theater){
         // at this point, users card has already been charged
 
-        if(DatabaseController.isMoviePublic(showtime.getMovieName())){
+        if(DatabaseController.moviePubliclyAvailable(showtime.getMovieName())){
             if(DatabaseController.getTakenSeats(showtime).size()>8){
                 return false;
             }
