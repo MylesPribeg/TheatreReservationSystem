@@ -47,6 +47,11 @@ public class LoginController{
         return new User();
     }
 
+    //return User object associated with
+    public User getUser(String email) {
+        return DatabaseController.getUser(email);
+    }
+
     //adds registeredUser to database and returns true on success
     //if email is already in use, returns false
     public boolean registerUser(RegisteredUser ru){

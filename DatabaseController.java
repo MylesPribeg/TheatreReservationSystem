@@ -141,6 +141,39 @@ public class DatabaseController{
 
     //LOGIN STUFF
 
+    public static User getUser(String email) {
+        User user = null;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT * FROM user WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            if (result.next()) {
+                user = new User(result.getString("email"), result.getDouble("credits"));
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return user;
+    }
+
     //check if there is a RU with specified email
     public static boolean emailExists(String email){
 
@@ -351,7 +384,7 @@ public class DatabaseController{
                 int newRows = statement1.executeUpdate();
 
                 if (newRows == 0) {
-                    //throw new SQLException("couldnt create user");
+                    System.out.println("coudlnt add new user to database");
                     return false;
                 }
             }
@@ -367,7 +400,7 @@ public class DatabaseController{
             int newRows = statement2.executeUpdate();
 
             if (newRows == 0) {
-                //throw new SQLException("couldnt create registered user");
+                System.out.println("coudlnt create new registered user");
                 return false;
             }
 
@@ -385,7 +418,7 @@ public class DatabaseController{
             newRows = statement3.executeUpdate();
 
             if (newRows == 0) {
-                //throw new SQLException("couldnt create registered user");
+                System.out.println("error adding credit card to database");
                 return false;
             }
             
@@ -456,7 +489,7 @@ public class DatabaseController{
                 int newRows = statement1.executeUpdate();
 
                 if (newRows == 0) {
-                    //throw new SQLException("couldnt create user");
+                    System.out.println("couldnt add new admin user to database");
                     return false;
                 }
             }
@@ -469,7 +502,7 @@ public class DatabaseController{
             int newRows = statement2.executeUpdate();
 
             if (newRows == 0) {
-                //throw new SQLException("couldnt create admin");
+                System.out.println("coudlnt create new admin in database");
                 return false;
             }
             
@@ -604,7 +637,7 @@ public class DatabaseController{
             int newRows = statement.executeUpdate();
 
             if (newRows == 0) {
-                //throw new SQLException("couldnt create user");
+                System.out.println("coudlnt add movie to database");
                 return false;
             }
 
@@ -942,7 +975,8 @@ public class DatabaseController{
             int newRows = statement.executeUpdate();
 
             if (newRows == 0) {
-                //throw new SQLException("couldnt create purchase");
+                System.out.println("coudlnt add new purchase to database");
+                return null;
             }
 
             int id = -1;
@@ -1020,8 +1054,9 @@ public class DatabaseController{
             statement.setInt(1, t.getTicketId());
 
             int numRowsDeleted = statement.executeUpdate();
+
             if (numRowsDeleted == 0) {
-                //throw new SQLException("ticket doesnt exist");
+                System.out.println("no rows were deleted from database");
             }
 
         } catch (Exception e) {
@@ -1097,6 +1132,10 @@ public class DatabaseController{
 
             int numRows = statement.executeUpdate();
 
+            if (numRows == 0) {
+                System.out.println("couldnt update credit for user in database");
+            }
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -1127,9 +1166,7 @@ public class DatabaseController{
 
             if (result.next()) {
                 credit = result.getDouble(1);
-            } else {
-                //throw new SQLException();
-            }
+            } 
 
         } catch (Exception e) {
 
@@ -1159,17 +1196,6 @@ public class DatabaseController{
 
             statement = con.prepareStatement("UPDATE registered_user SET signup_date = ? WHERE email = ?");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-            // String dateInString = "2022-12-05 20:45:00";
-            // Date date = null;
-            // try {
-            // date = formatter.parse(dateInString);
-            // } catch (ParseException e) {
-            //     // TODO Auto-generated catch block
-            //     e.printStackTrace();
-            // }
-
             Date date = new Date();
             String strDate = convertDateToString(date);
             System.out.println("update last payment: " + strDate);
@@ -1180,7 +1206,7 @@ public class DatabaseController{
             int numRows = statement.executeUpdate();
 
             if (numRows == 0) {
-                //throw new SQLException("error updating payment date");
+                System.out.println("coudlnt update payment");
             }
 
         } catch (Exception e) {
@@ -1196,18 +1222,5 @@ public class DatabaseController{
     private static String convertDateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
         return dateFormat.format(date);  
-    }
-
-    private static Date convertStringToDate(String dateString) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-        Date date = null;
-        try {
-           date = formatter.parse(dateString);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return date;
     }
 }
