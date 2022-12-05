@@ -1,14 +1,14 @@
 import java.util.Date;
 
 public class Ticket {
-    int id;
-    int purchase_id;
-    String seat_id;
-    Date time;
-    String showroom;
-    double price;
-    String theatre;
-    String movie;
+    private int id;
+    private int purchase_id;
+    private String seat_id;
+    private Date time;
+    private String showroom;
+    private double price;
+    private String theatre;
+    private String movie;
     
     public Ticket(int ticket_id, int purchase_id, String seat_id, Date time, String room, String theatre, String movie)
     {

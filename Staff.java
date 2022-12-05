@@ -7,11 +7,9 @@ public class Staff{
         this.jobTitle = jobTitle;
     }
 
-    public String getName(){
-        return name;
-    }
+    public String getName(){return name;}
+    public String getJob(){return jobTitle;}
 
-    public String getJob(){
-        return jobTitle;
-    }
+    public void setName(String name){this.name = name;}
+    public void setJob(String job){this.jobTitle = job;}
 }
