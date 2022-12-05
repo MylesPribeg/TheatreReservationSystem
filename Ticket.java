@@ -8,20 +8,22 @@ public class Ticket {
     String showroom;
     double price;
     String theatre;
+    String movie;
     
-    public Ticket(int ticket_id, int purchase_id, String seat_id, Date time, String room, String theatre)
+    public Ticket(int ticket_id, int purchase_id, String seat_id, Date time, String room, String theatre, String movie)
     {
-        this(purchase_id, seat_id, time, room, theatre);
+        this(purchase_id, seat_id, time, room, theatre, movie);
         this.id = ticket_id;
     }
 
-    public Ticket(int purchase_id, String seat_id, Date time, String room, String theatre){
+    public Ticket(int purchase_id, String seat_id, Date time, String room, String theatre, String movie){
         this.purchase_id = purchase_id;
         this.seat_id = seat_id;
         this.time = time;
         showroom=room;
         this.price = 20.00;
         this.theatre = theatre;
+        this.movie = movie;
     }
 
     public Date getTime(){return this.time;}
@@ -31,4 +33,5 @@ public class Ticket {
     public String getShowroom(){return this.showroom;}
     public double getPrice(){return this.price;}
     public String getTheatre(){return this.theatre;}
+    public String getMovie(){return this.movie;}
 }
