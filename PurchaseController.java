@@ -54,13 +54,15 @@ public class PurchaseController {
                     seat.getSeatId(),
                     newPurchase.getDate(),
                     seat.getRoomName(),
-                    theater);
+                    theater,
+                    showtime.getMovieName());
             
             DatabaseController.addTicket(newTicket);
         }
         // send email with tickets
         EmailController.sendPurchaseReceipt(showtime, email, seats, totalCost);
 
+        return true;
     }
     
 }

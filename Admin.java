@@ -55,7 +55,7 @@ public class Admin extends User{
     //returns false if movie already exists
     public boolean addMovie(Movie movie){
 
-        if(DatabaseController.movieExists(movie)){
+        if(DatabaseController.movieExists(movie.getTitle())){
             return false;
         }
         DatabaseController.addMovie(movie);
@@ -66,8 +66,8 @@ public class Admin extends User{
     public boolean removeMovie(Movie movie){
     
         // if movie exists: remove movie
-        if(DatabaseController.movieExists(movie)){
-            DatabaseController.removeMovie(movie);
+        if(DatabaseController.movieExists(movie.getTitle())){
+            DatabaseController.removeMovie(movie.getTitle());
             return true;
         }
         return false;
