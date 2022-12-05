@@ -144,40 +144,12 @@ public class DatabaseController{
         return con;
     }
 
-    //LOGIN STUFF
-
-    public static User getUser(String email) {
-        User user = null;
-
-        Connection con = null;
-        ResultSet result = null;
-        PreparedStatement statement = null;
-
-        try {
-
-            con = DatabaseController.getConnection();
-
-            statement = con.prepareStatement("SELECT * FROM user WHERE email = ?");
-            statement.setString(1, email);
-
-            result = statement.executeQuery();
-
-            if (result.next()) {
-                user = new User(result.getString("email"), result.getDouble("credits"));
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        } finally {
-            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
-            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
-            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
-        }
-
-        return user;
+    private static String convertDateToString(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+        return dateFormat.format(date);  
     }
+
+    //LOGIN STUFF
 
     //check if there is a RU with specified email
     public static boolean emailExists(String email){
@@ -210,6 +182,38 @@ public class DatabaseController{
         }
 
         return emailExists;
+    }
+
+    //check if admin email exists
+    public static boolean adminUserExists(String email){
+        boolean userExists = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT email FROM admin WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            userExists = result.next();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return userExists;
     }
 
     // check database for Admin with given username and password
@@ -277,6 +281,39 @@ public class DatabaseController{
         }
 
         return ruExists;
+    }
+
+    public static User getUser(String email) {
+        User user = null;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT * FROM user WHERE email = ?");
+            statement.setString(1, email);
+
+            result = statement.executeQuery();
+
+            if (result.next()) {
+                user = new User(result.getString("email"), result.getDouble("credits"));
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return user;
     }
 
     //return Registered User object with given email
@@ -524,38 +561,6 @@ public class DatabaseController{
         }
 
         return success;
-    }
-
-    //check if admin email exists
-    public static boolean adminUserExists(String email){
-        boolean userExists = false;
-
-        Connection con = null;
-        ResultSet result = null;
-        PreparedStatement statement = null;
-
-        try {
-
-            con = DatabaseController.getConnection();
-
-            statement = con.prepareStatement("SELECT email FROM admin WHERE email = ?");
-            statement.setString(1, email);
-
-            result = statement.executeQuery();
-
-            userExists = result.next();
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        } finally {
-            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
-            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
-            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
-        }
-
-        return userExists;
     }
 
     //remove admin from database
@@ -1262,8 +1267,4 @@ public class DatabaseController{
         }
     }
 
-    private static String convertDateToString(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-        return dateFormat.format(date);  
-    }
 }

@@ -12,5 +12,4 @@ public class Theater{
         this.address = address;
     }
 
-    
 }

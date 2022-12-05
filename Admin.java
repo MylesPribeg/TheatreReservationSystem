@@ -34,19 +34,19 @@ public class Admin extends User{
     }
 
     //adds Admin to database
-    public boolean addAdmin(Admin a){
-        if(DatabaseController.adminUserExists(a.getEmail())){
+    public boolean addAdmin(Admin admin){
+        if(DatabaseController.adminUserExists(admin.getEmail())){
             return false;
         }
-        DatabaseController.addAdmin(a);
+        DatabaseController.addAdmin(admin);
         return true;
     }
 
     //removes Admin from database
-    public boolean removeAdmin(Admin a){
+    public boolean removeAdmin(Admin admin){
 
-        if(DatabaseController.adminUserExists(a.getEmail())){
-            DatabaseController.removeAdmin(a);
+        if(DatabaseController.adminUserExists(admin.getEmail())){
+            DatabaseController.removeAdmin(admin);
             return true;
         }
         return false;

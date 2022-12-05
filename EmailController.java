@@ -64,5 +64,4 @@ public class EmailController {
         SendEmail.send(email, contents, "Purchase Receipt");
     }
 
-
 }

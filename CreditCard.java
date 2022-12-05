@@ -18,21 +18,10 @@ public class CreditCard{
         this.cvv = 0;
     }
 
-    public String getCompany() {
-        return company;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public int getExpiryDate() {
-        return expiryDate;
-    }
-
-    public int getCvv() {
-        return cvv;
-    }
+    public String getCompany() {return company;}
+    public String getNumber() {return number;}
+    public int getExpiryDate() {return expiryDate;}
+    public int getCvv() {return cvv;}
 
     public boolean charge(double amount){
         // call this anytime a card is charged

@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import java.sql.Date;
-
 public class CancelTicketController {
     
     private User user;
