@@ -4,16 +4,21 @@ public class ViewingsController{
 
     private User user;
     private ArrayList<Showtime> showtimes;
+    private ViewStrategy vStrategy;
 
     public ViewingsController(User user){
         this.user = user;
         
         if(this.user instanceof User){
-            this.showtimes = DatabaseController.getPublicShowtimes();
+            this.vStrategy = new PublicViewStrategy();
         }
         else{
-            this.showtimes = DatabaseController.getAllShowtimes();
+            this.vStrategy = new RegisteredViewStrategy();
         }
+    }
+
+    public void setViewStrategy(ViewStrategy s){
+        this.vStrategy = s;
     }
 
     public ArrayList<Showtime> getShowtimes(){return this.showtimes;}
