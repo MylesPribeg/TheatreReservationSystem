@@ -10,11 +10,11 @@ public class ViewingsController{
     public ViewingsController(User user){
         this.user = user;
         
-        if(this.user instanceof User){
-            this.vStrategy = new PublicViewStrategy();
+        if(this.user instanceof RegisteredUser){
+            this.vStrategy = new RegisteredViewStrategy();
         }
         else{
-            this.vStrategy = new RegisteredViewStrategy();
+            this.vStrategy = new PublicViewStrategy();
         }
 
         this.showtimes = vStrategy.getAvailableShowtimes();
