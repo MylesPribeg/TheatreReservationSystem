@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ViewingsController{
 
@@ -33,7 +34,10 @@ public class ViewingsController{
         ArrayList<String> movies = new ArrayList<String>();
 
         for(Showtime st: showtimes){
-            movies.add(st.getMovieName());
+            String mov = st.getMovieName();
+            if(!movies.contains(mov)){
+                movies.add(mov);
+            }  
         }
         return movies;        
     }
@@ -42,7 +46,10 @@ public class ViewingsController{
         ArrayList<String> theaters = new ArrayList<String>();
 
         for(Showtime st: showtimes){
-            theaters.add(st.getTheaterName());
+            String theat = st.getTheaterName();
+            if(!theaters.contains(theat)){
+                theaters.add(st.getTheaterName());
+            }      
         }
         return theaters;
     }
