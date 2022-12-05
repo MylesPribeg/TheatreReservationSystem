@@ -15,6 +15,8 @@ public class ViewingsController{
         else{
             this.vStrategy = new RegisteredViewStrategy();
         }
+
+        this.showtimes = vStrategy.getAvailableShowtimes();
     }
 
     public void setViewStrategy(ViewStrategy s){
