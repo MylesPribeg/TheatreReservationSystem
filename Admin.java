@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Admin extends User{
 
     private String password;
@@ -9,6 +11,14 @@ public class Admin extends User{
 
     public String getPassword(){
         return password;
+    }
+
+    public void sendAnnouncement(String message){
+        ArrayList<String> emails = DatabaseController.getAllRUEmails();
+        for(String email: emails){
+            email = ""; //remove this line to actually send email
+            SendEmail.send(email, message, "Movie Announcement");
+        }    
     }
 
     public boolean addRU(RegisteredUser ru){
