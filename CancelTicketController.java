@@ -49,6 +49,7 @@ public class CancelTicketController {
             DatabaseController.addCredit(user.getEmail(), refund);
         }
 
-
+        // send cancelation email
+        EmailController.sendCancelationReceipt(user.getEmail(), refund, tickets);
     }
 }
