@@ -128,6 +128,11 @@ public class DatabaseController{
         System.out.println("created new user: " + addRU(nameTest));
         RegisteredUser returnRu = getRU("test@b.com");
         System.out.println(returnRu.getName());
+
+        String title = "John Wick: Chapter 4";
+        System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
+        title = "Top Gun: Maverick";
+        System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
        
     }
 
@@ -579,6 +584,41 @@ public class DatabaseController{
         }
 
         return success;
+    }
+
+    public static boolean moviePubliclyAvailable(String movie) {
+        boolean moviePubliclyAvailable = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT publicly_available FROM movie WHERE name = ?");
+            statement.setString(1, movie);
+
+            result = statement.executeQuery();
+
+            if (result.next()) {
+                moviePubliclyAvailable =  result.getBoolean(1);
+            } else {
+                System.out.println("couldnt find movie");
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+                try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+                try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+                try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();} 
+        }
+
+        return moviePubliclyAvailable;
     }
 
     //check if movie exists
