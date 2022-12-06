@@ -13,14 +13,6 @@ public class Admin extends User{
         return password;
     }
 
-    public void sendAnnouncement(String message){
-        ArrayList<String> emails = DatabaseController.getAllRUEmails();
-        for(String email: emails){
-            email = ""; //remove this line to actually send email
-            SendEmail.send(email, message, "Movie Announcement");
-        }    
-    }
-
     public boolean addRU(RegisteredUser ru){
         // check if email already exists
         if(DatabaseController.emailExists(ru.getEmail())){
