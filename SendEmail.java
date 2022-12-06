@@ -15,6 +15,7 @@ import javax.swing.text.StringContent;
 
 public class SendEmail {
 
+    //sends email to receiverEmail, with given contents and header
     public static void send(String receiverEmail, String contents, String header){
         // Recipient's email ID needs to be mentioned.
         // String to = receiverEmail;

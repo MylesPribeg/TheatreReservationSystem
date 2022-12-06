@@ -8,6 +8,7 @@ public class RegisteredUser extends User{
     private CreditCard card;
     private Date lastPayment;
 
+    //constructors
     public RegisteredUser(String email, String password, 
             String name,
             String address, String company, String cardNumber, int cardExpiryDate, int cvv, java.sql.Date curr_date)
@@ -32,7 +33,7 @@ public class RegisteredUser extends User{
             this.lastPayment = date;
         }
     
-    
+    //getters and setters
     public CreditCard getCreditCard() {return card;}
     public String getEmail(){return email;}
     public String getName() {return name;}
@@ -48,6 +49,7 @@ public class RegisteredUser extends User{
         return lastPayment;
     }
 
+    //checks if a member has paid their annual fee
     public boolean checkMemberExpired(){
         // returns true if this user's membership has expired and their fee must be paid
         java.util.Date curDate = new java.util.Date();
@@ -60,6 +62,7 @@ public class RegisteredUser extends User{
 
     }
 
+    //pays annual fee
     public boolean payMemberFee(){
         // is called by GUI if RU fee is required, returns true if fee is paid
         DatabaseController.updatePaymentDate(email);

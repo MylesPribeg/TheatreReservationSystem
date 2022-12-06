@@ -6,6 +6,7 @@ public class ViewingsController{
     private ArrayList<Showtime> showtimes;
     private ViewStrategy vStrategy;
 
+    //constructors
     public ViewingsController(User user){
         this.user = user;
         
@@ -19,6 +20,7 @@ public class ViewingsController{
         this.showtimes = vStrategy.getAvailableShowtimes();
     }
 
+    //getters and setters
     public void setViewStrategy(ViewStrategy s){
         this.vStrategy = s;
     }
@@ -29,6 +31,7 @@ public class ViewingsController{
         this.user = user;
     }
 
+    //returns a list of strings of all movie names available to the user
     public ArrayList<String> getAllMovieNames(){
         ArrayList<String> movies = new ArrayList<String>();
 
@@ -41,6 +44,7 @@ public class ViewingsController{
         return movies;        
     }
 
+    //returns a list of all theater names available to the user
     public ArrayList<String> getAllTheaterNames(){
         ArrayList<String> theaters = new ArrayList<String>();
 
@@ -53,6 +57,9 @@ public class ViewingsController{
         return theaters;
     }
 
+    //returns a filtered list of available showtimes
+    //the showtime must contain the given moviename and theatername
+    //if no filter is required, set string to ""
     public ArrayList<Showtime> getFilteredList(String movieName, String theaterName){
 
         movieName = movieName.toUpperCase();

@@ -4,15 +4,19 @@ public class CancelTicketController {
     
     private User user;
 
+    //constructor
+    //input user
     public CancelTicketController(User user){
         this.user = user;
     }
 
+    //returns a list of all the tickets purchased by the user
     public ArrayList<Ticket> getPurchasedTickets(){
         return DatabaseController.getPurchasedTickets(user.getEmail());
     }
 
-    //check if ticket is over 72 hours
+    //checks if movie for ticket is starting under 72 hours
+    //returns false if movie starts in less than 72 hours, otherwise true
     public boolean validateTicket(Ticket ticket){
 
         java.util.Date ticketDate = ticket.getTime();
@@ -24,6 +28,7 @@ public class CancelTicketController {
         return false;
     }
 
+    //refunds ticket objects for user
     public void refundTickets(ArrayList<Ticket> tickets){
         boolean registered = false;
         if (user instanceof RegisteredUser){

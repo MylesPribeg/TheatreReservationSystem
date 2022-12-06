@@ -1,9 +1,14 @@
 public class LoginController{
     
+    //singleton design pattern
+
+    //singleton instance
     private static LoginController onlyInstance;
     
+    //private constructor
     private LoginController(){}
     
+    //returns only instance for singleton
     public static LoginController getOnlyInstance(){
         if(onlyInstance ==null){
             onlyInstance = new LoginController();
@@ -47,6 +52,7 @@ public class LoginController{
         return new User();
     }
 
+    //adds user with given email to the database
     public boolean addUser(String email) {
         return DatabaseController.addUser(null);
     }
