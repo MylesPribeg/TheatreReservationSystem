@@ -17,7 +17,7 @@ public class Admin extends User{
         ArrayList<String> emails = DatabaseController.getAllRUEmails();
         for(String email: emails){
             email = ""; //remove this line to actually send email
-            //SendEmail.send(email, message, "Movie Announcement");
+            SendEmail.send(email, message, "Movie Announcement");
         }    
     }
 

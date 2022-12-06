@@ -147,6 +147,8 @@ public class StartWindow extends JFrame {
 					    int send = JOptionPane.showConfirmDialog(null, new JScrollPane( textArea), 
 					    		"Send movie news", JOptionPane.OK_CANCEL_OPTION);
 					    if(send == JOptionPane.OK_OPTION) {
+					    	EmailController em = new EmailController();
+					    	em.sendAnnouncements(textArea.getText());
 					    	System.out.println(textArea.getText());
 					    }
 					  

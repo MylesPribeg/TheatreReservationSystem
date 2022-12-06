@@ -1323,7 +1323,7 @@ public class DatabaseController{
                 int id = result.getInt("ticket_id");
                 int purchase_id = result.getInt("id_purchase");
                 String seat_no = result.getString("seat_no");
-                Date time = result.getTimestamp("purchase_date");
+                Date time = result.getTimestamp("show_date");
                 String showroom = String.valueOf(result.getInt("room_no"));
                 String theatre = result.getString("theatre");
                 String movie = result.getString("movie");

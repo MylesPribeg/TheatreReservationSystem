@@ -6,8 +6,8 @@ public class EmailController {
     public void sendAnnouncements(String message){
         ArrayList<String> emails = DatabaseController.getAllRUEmails();
         for(String email: emails){
-            email = ""; //remove this line to send email to given emails
-            //SendEmail.send(email, message, "Movie Announcement");
+            //email = ""; //remove this line to send email to given emails
+            SendEmail.send(email, message, "Movie Announcement");
         }
     }
 
@@ -35,7 +35,7 @@ public class EmailController {
 
         //send out email to user
         System.out.println(contents);
-        //SendEmail.send(email, contents, "Refund Receipt");
+        SendEmail.send(email, contents, "Refund Receipt");
     }
 
     //sends a receipt and purchased tickets to user with given email
@@ -56,7 +56,7 @@ public class EmailController {
 
         for(int i=0;i<seats.size();i++){
             contents += 
-                "TICKET " + i + "\n\n" +
+                "TICKET " + (i + 1) + "\n\n" +
                 "Theater: " + showtime.getTheaterName() + "\n" + 
                 "Showroom: " + showtime.getRoomName() + "\n" + 
                 "Seat: " + seats.get(i).getSeatId() + "\n" + 
@@ -67,7 +67,7 @@ public class EmailController {
 
         //send out email to user
         System.out.println(contents);
-        //SendEmail.send(email, contents, "Purchase Receipt");
+        SendEmail.send(email, contents, "Purchase Receipt");
     }
 
 }

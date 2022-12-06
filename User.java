@@ -10,7 +10,7 @@ public class User {
 
     public User(){
         email = "";
-        credit = -1;
+        credit = 0;
     }
 
     //getters

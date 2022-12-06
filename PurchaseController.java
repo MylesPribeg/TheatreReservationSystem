@@ -59,7 +59,7 @@ public class PurchaseController {
             Ticket newTicket = new Ticket(
                     newPurchase.getID(), 
                     seat.getSeatId(),
-                    newPurchase.getDate(),
+                    showtime.getTime(),
                     seat.getRoomName(),
                     theater,
                     showtime.getMovieName());
