@@ -10,6 +10,7 @@ public class Ticket {
     private String theatre;
     private String movie;
     
+    //constructors
     public Ticket(int ticket_id, int purchase_id, String seat_id, Date time, String room, String theatre, String movie)
     {
         this(purchase_id, seat_id, time, room, theatre, movie);
@@ -26,6 +27,7 @@ public class Ticket {
         this.movie = movie;
     }
 
+    //getters
     public Date getTime(){return this.time;}
     public int getTicketId(){return this.id;}
     public int getPurchaseId(){return this.purchase_id;}

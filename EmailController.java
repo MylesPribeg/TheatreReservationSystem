@@ -2,15 +2,16 @@ import java.util.ArrayList;
 
 public class EmailController {
 
-
+    //send public announcements about movies to all registered users
     public void sendAnnouncements(String message){
         ArrayList<String> emails = DatabaseController.getAllRUEmails();
         for(String email: emails){
-            email = ""; //remove this line to actually send email
+            email = ""; //remove this line to send email to given emails
             SendEmail.send(email, message, "Movie Announcement");
         }
     }
 
+    //send cancelation receipt to user's email
     public static void sendCancelationReceipt(String email, double refund, ArrayList<Ticket> tickets){
         
         String contents = 
@@ -37,6 +38,7 @@ public class EmailController {
         SendEmail.send(email, contents, "Refund Receipt");
     }
 
+    //sends a receipt and purchased tickets to user with given email
     public static void sendPurchaseReceipt(Showtime showtime, String email, ArrayList<Seat> seats, double totalCost){
         double seatCost = 20.00;
 

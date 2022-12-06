@@ -7,11 +7,13 @@ public class Theater{
     private ArrayList<Showroom> showrooms;
     private ArrayList<Showtime> showtimes;
 
+    //constructor
     public Theater(String name, String address){
         this.name = name;
         this.address = address;
     }
 
+    //getters
     public String getName(){return name;} 
     public String getAddress(){return address;}  
     public ArrayList<Movie> getMovies(){return movies;}

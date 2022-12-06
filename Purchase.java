@@ -6,6 +6,7 @@ public class Purchase {
     private double cost;
     private Date dateOfPurchase;
 
+    //constructors
     public Purchase(int id, String email, double amount){
         purchase_id = id;
         buyer_email = email;
@@ -17,6 +18,7 @@ public class Purchase {
         this.cost = cost;
     }
 
+    //getters
     public int getID(){
         return purchase_id;
     }

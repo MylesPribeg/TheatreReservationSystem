@@ -137,6 +137,7 @@ public class DatabaseController{
 
     }
 
+    //gets connection for database
     private static Connection getConnection() throws ClassNotFoundException, SQLException{
         Connection con = null;
 
@@ -145,13 +146,15 @@ public class DatabaseController{
         return con;
     }
 
+    //convert Date object to string
     private static String convertDateToString(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
         return dateFormat.format(date);  
     }
 
-    //LOGIN STUFF
+    //LOGIN FUNCTIONS
 
+    //gets all emails for registered users
     public static ArrayList<String> getAllRUEmails() {
         ArrayList<String> ruEmails = new ArrayList<>();
 
@@ -288,6 +291,8 @@ public class DatabaseController{
         return adminExists;
     }
 
+    //adds user to the database
+    //returns false on failure
     public static boolean addUser(String email) {
         boolean success = false;
 
@@ -359,6 +364,7 @@ public class DatabaseController{
         return ruExists;
     }
 
+    //returns use object for specified email
     public static User getUser(String email) {
         User user = null;
 
@@ -445,6 +451,7 @@ public class DatabaseController{
         return ru;
     }
 
+    //check if there is a user in the database with given email
     public static boolean userExists(String email) {
         boolean userExists = false;
 
@@ -667,6 +674,7 @@ public class DatabaseController{
         return success;
     }
 
+    //returns boolean of whether movie is publicly available or not
     public static boolean moviePubliclyAvailable(String movie) {
         boolean moviePubliclyAvailable = false;
 
@@ -735,7 +743,8 @@ public class DatabaseController{
         return movieExists;
     }
 
-    //add movie
+    //add movie to database
+    //return false on failure
     public static boolean addMovie(Movie movie){
         boolean success = false;
 
@@ -777,7 +786,8 @@ public class DatabaseController{
         return success;
     }
 
-    //remove movie
+    //remove movie from database
+    //return false on failure
     public static boolean removeMovie(String movie){
         boolean success = false;
 
@@ -805,7 +815,8 @@ public class DatabaseController{
         return success;
     }
 
-    //add staff member
+    //add staff member to database
+    //return false on failure
     public static boolean addStaff(Staff s){
         boolean success = false;
 
@@ -873,6 +884,7 @@ public class DatabaseController{
         return success;
     }
 
+    //get all staff members in the database
     public static ArrayList<Staff> getAllStaff() {
         ArrayList<Staff> staff = new ArrayList<>();
 
@@ -1120,6 +1132,7 @@ public class DatabaseController{
 
     // SEAT STUFF
 
+    //returns an array of all the taken seats for a given showtime
     public static ArrayList<Seat> getTakenSeats(Showtime showtime){
         ArrayList<Seat> seats = new ArrayList<>();
 
@@ -1333,6 +1346,7 @@ public class DatabaseController{
         return tickets;
     }
 
+    //add amount of credit to user with given email
     public static void addCredit(String email, double amount){
         Connection con = null;
         PreparedStatement statement = null;

@@ -4,6 +4,7 @@ public class Movie{
     private String theatre;
     private boolean publicly_available;
 
+    //constructor
     public Movie(String title, String theatre, String genre, boolean publicly_available) {
         this.title = title;
         this.theatre = theatre;
@@ -11,6 +12,7 @@ public class Movie{
         this.publicly_available = publicly_available;
     }
 
+    //getters
     public String getTitle() {return title;}
     public String getTheatre() {return theatre;}
     public String getGenre() {return genre;}

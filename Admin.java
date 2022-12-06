@@ -4,15 +4,18 @@ public class Admin extends User{
 
     private String password;
 
+    //constructor
     public Admin(String email, String password){
         this.email = email;
         this.password = password;
     };
 
+    //getters
     public String getPassword(){
         return password;
     }
 
+    //add RU to the database
     public boolean addRU(RegisteredUser ru){
         // check if email already exists
         if(DatabaseController.emailExists(ru.getEmail())){
@@ -54,7 +57,7 @@ public class Admin extends User{
         return false;
     }
 
-    //returns false if movie already exists
+    //adds a movie to the database. Returns false if movie already exists
     public boolean addMovie(Movie movie){
 
         if(DatabaseController.movieExists(movie.getTitle())){
@@ -64,7 +67,7 @@ public class Admin extends User{
         return true;
     }
 
-    //returns false if movie does not exist
+    //removes movie frmo the database. returns false if movie does not exist
     public boolean removeMovie(Movie movie){
     
         // if movie exists: remove movie
@@ -75,15 +78,17 @@ public class Admin extends User{
         return false;
     }
 
+    //add staff member to the database
     public boolean addStaff(Staff staff){
         return DatabaseController.addStaff(staff);
     }
 
-
+    //remove staff member from the database
     public boolean removeStaff(Staff staff){
         return  DatabaseController.removeStaff(staff);
     }
 
+    //returns a list of all staff members in the database
     public ArrayList<Staff> getAllStaff() {
         return DatabaseController.getAllStaff();
     }
