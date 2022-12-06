@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.Locale;
 import java.sql.*;
 import java.text.DateFormat;
@@ -9,131 +10,131 @@ import java.text.SimpleDateFormat;
 public class DatabaseController{
     
     public static void main(String[] args) {
-        System.out.println("email exists: " + emailExists("dave@gmail.com"));
-        System.out.println("ru: " + RUExists("dave@gmail.com", "password123"));
-        //System.out.println(getRU("dave@gmail.com").getPassword());
-        System.out.println("movie exists: " + movieExists("Top Gun: Maverick"));
-        System.out.println("movie removed: " + removeMovie("my movie"));
-        System.out.println("\n- adding movie:");
-        Movie movie = new Movie("Smile", "Chinook Theatre", "Horror", true);
-        System.out.printf("successfully created movie %s: %b\n", movie.getTitle(), addMovie(movie));
-        System.out.printf("movie %s exists: %s\n", movie.getTitle(), movieExists(movie.getTitle()));
-        System.out.println("\n--all movies:");
-        getAllMovies();
-        System.out.println("\n- removing movie:");
-        System.out.printf("successfully removed movie %s: %b\n", movie.getTitle(), removeMovie(movie.getTitle()));
+        // System.out.println("email exists: " + emailExists("dave@gmail.com"));
+        // System.out.println("ru: " + RUExists("dave@gmail.com", "password123"));
+        // //System.out.println(getRU("dave@gmail.com").getPassword());
+        // System.out.println("movie exists: " + movieExists("Top Gun: Maverick"));
+        // System.out.println("movie removed: " + removeMovie("my movie"));
+        // System.out.println("\n- adding movie:");
+        // Movie movie = new Movie("Smile", "Chinook Theatre", "Horror", true);
+        // System.out.printf("successfully created movie %s: %b\n", movie.getTitle(), addMovie(movie));
+        // System.out.printf("movie %s exists: %s\n", movie.getTitle(), movieExists(movie.getTitle()));
+        // System.out.println("\n--all movies:");
+        // getAllMovies();
+        // System.out.println("\n- removing movie:");
+        // System.out.printf("successfully removed movie %s: %b\n", movie.getTitle(), removeMovie(movie.getTitle()));
 
-        System.out.println("\n--all movies:");
-        getAllMovies();
+        // System.out.println("\n--all movies:");
+        // getAllMovies();
 
-        System.out.println("\n--all showtimes:");
-        getAllShowtimes();
-        System.out.println("\n--public showtimes:");
-        getPublicShowtimes();
-        System.out.println("\n-public movies");
-        getPublicMovies();
-        System.out.println("\n--all movies:");
-        getAllMovies();
-        System.out.println("\n-all theaters:");
-        getAllTheaters();
-        System.out.println("\n-taken seats:");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        // System.out.println("\n--all showtimes:");
+        // getAllShowtimes();
+        // System.out.println("\n--public showtimes:");
+        // getPublicShowtimes();
+        // System.out.println("\n-public movies");
+        // getPublicMovies();
+        // System.out.println("\n--all movies:");
+        // getAllMovies();
+        // System.out.println("\n-all theaters:");
+        // getAllTheaters();
+        // System.out.println("\n-taken seats:");
+        // SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
-        String dateInString = "2022-12-05 20:45:00";
-        Date date = null;
-        try {
-           date = formatter.parse(dateInString);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // String dateInString = "2022-12-05 20:45:00";
+        // Date date = null;
+        // try {
+        //    date = formatter.parse(dateInString);
+        // } catch (ParseException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
 
-        Showtime t = new Showtime(date, "a", "a", "a");
-        getTakenSeats(t);
+        // Showtime t = new Showtime(date, "a", "a", "a");
+        // getTakenSeats(t);
 
-        //Ticket ticket = new Ticket(5, "B3", date, "3", "Chinook Theatre");
-        //addTicket(ticket);
+        // //Ticket ticket = new Ticket(5, "B3", date, "3", "Chinook Theatre");
+        // //addTicket(ticket);
 
-        //addPurchase("dave@gmail.com", 20.00);
+        // //addPurchase("dave@gmail.com", 20.00);
 
-        System.out.println("\n- purchased tickets");
-        String dave = "dave@gmail.com";
-        getPurchasedTickets(dave);
+        // System.out.println("\n- purchased tickets");
+        // String dave = "dave@gmail.com";
+        // getPurchasedTickets(dave);
 
-        System.out.println("\n- credit");
-        System.out.println("credit: " +  getUserCredit(dave));
-        System.out.println("refunding $20.01");
-        addCredit(dave, 20.01);
-        System.out.println("credit: " +  getUserCredit(dave));
-        System.out.println("purchase $9.99");
-        subtractCredits(dave, 9.99);
-        System.out.println("credit: " +  getUserCredit(dave));
+        // System.out.println("\n- credit");
+        // System.out.println("credit: " +  getUserCredit(dave));
+        // System.out.println("refunding $20.01");
+        // addCredit(dave, 20.01);
+        // System.out.println("credit: " +  getUserCredit(dave));
+        // System.out.println("purchase $9.99");
+        // subtractCredits(dave, 9.99);
+        // System.out.println("credit: " +  getUserCredit(dave));
 
-        System.out.println("\n add/remove registered user:");
-        String email = "jackbarrrie@outlok.com";
-        System.out.println("user exists: " + userExists(email));
-        System.out.println("ru exists: " + emailExists(email));
-        System.out.println("ru: " + RUExists(email, "12345"));
-        RegisteredUser user = new RegisteredUser(email, "12345", "pierre b borne",
-            "an andress", new CreditCard("td", "1111 1111 1111 1111", 0327, 444), 0, date);
-        System.out.println("created new ru: " + addRU(user));
-        System.out.println("user exists: " + userExists(email));
-        System.out.println("ru exists: " + emailExists(email));
-        System.out.println("ru: " + RUExists(email, "12345"));
-        System.out.println("removed ru: " + removeRU(user));
-        System.out.println("user exists: " + userExists(email));
-        System.out.println("ru exists: " + emailExists(email));
-        System.out.println("ru: " + RUExists(email, "12345"));
+        // System.out.println("\n add/remove registered user:");
+        // String email = "jackbarrrie@outlok.com";
+        // System.out.println("user exists: " + userExists(email));
+        // System.out.println("ru exists: " + emailExists(email));
+        // System.out.println("ru: " + RUExists(email, "12345"));
+        // RegisteredUser user = new RegisteredUser(email, "12345", "pierre b borne",
+        //     "an andress", new CreditCard("td", "1111 1111 1111 1111", 0327, 444), 0, date);
+        // System.out.println("created new ru: " + addRU(user));
+        // System.out.println("user exists: " + userExists(email));
+        // System.out.println("ru exists: " + emailExists(email));
+        // System.out.println("ru: " + RUExists(email, "12345"));
+        // System.out.println("removed ru: " + removeRU(user));
+        // System.out.println("user exists: " + userExists(email));
+        // System.out.println("ru exists: " + emailExists(email));
+        // System.out.println("ru: " + RUExists(email, "12345"));
 
-        System.out.println("\n- admin stuff");
-        Admin a = new Admin("admin@gmail.com", "pass");
-        System.out.printf("created admin %s: %b\n", a.getEmail(), addAdmin(a));
-        System.out.printf("admin %s exists: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
-        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", a.getEmail(), a.getPassword(), verifyAdmin(a));
-        Admin bad = new Admin("admin@gmail.com", "asdbasdas");
-        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", bad.getEmail(), bad.getPassword(), verifyAdmin(bad));
-        Admin d = new Admin("admi@gmail.com", "pass");
-        System.out.printf("admin logged in using email(%s), pass(%s): %b\n", d.getEmail(), d.getPassword(), verifyAdmin(d));
-        System.out.printf("removing admin %s: %b\n", a.getEmail(), removeAdmin(a));
-        System.out.printf("admin %s exits: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
-        System.out.printf("admin %s exits: %b\n", d.getEmail(), adminUserExists(d.getEmail()));
+        // System.out.println("\n- admin stuff");
+        // Admin a = new Admin("admin@gmail.com", "pass");
+        // System.out.printf("created admin %s: %b\n", a.getEmail(), addAdmin(a));
+        // System.out.printf("admin %s exists: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
+        // System.out.printf("admin logged in using email(%s), pass(%s): %b\n", a.getEmail(), a.getPassword(), verifyAdmin(a));
+        // Admin bad = new Admin("admin@gmail.com", "asdbasdas");
+        // System.out.printf("admin logged in using email(%s), pass(%s): %b\n", bad.getEmail(), bad.getPassword(), verifyAdmin(bad));
+        // Admin d = new Admin("admi@gmail.com", "pass");
+        // System.out.printf("admin logged in using email(%s), pass(%s): %b\n", d.getEmail(), d.getPassword(), verifyAdmin(d));
+        // System.out.printf("removing admin %s: %b\n", a.getEmail(), removeAdmin(a));
+        // System.out.printf("admin %s exits: %b\n", a.getEmail(), adminUserExists(a.getEmail()));
+        // System.out.printf("admin %s exits: %b\n", d.getEmail(), adminUserExists(d.getEmail()));
 
-        System.out.println("\n- Update RU Payment Date");
-        addRU(user);
-        {
-            RegisteredUser daveObj = getRU(email);
-            String ruName = daveObj.getName();
-            String ruEmail = daveObj.getEmail();
-            String ruPass = daveObj.getPassword();
-            String ruAddy = daveObj.getAddress();
-            String ruLastPayment = convertDateToString(daveObj.getLastPayment());
-            System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
-        }   
-        System.out.println("updating date to currnet date");
-        updatePaymentDate(email);
-        {
-            RegisteredUser daveObj = getRU(email);
-            String ruName = daveObj.getName();
-            String ruEmail = daveObj.getEmail();
-            String ruPass = daveObj.getPassword();
-            String ruAddy = daveObj.getAddress();
-            String ruLastPayment = convertDateToString(daveObj.getLastPayment());
-            System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
-        }   
+        // System.out.println("\n- Update RU Payment Date");
+        // addRU(user);
+        // {
+        //     RegisteredUser daveObj = getRU(email);
+        //     String ruName = daveObj.getName();
+        //     String ruEmail = daveObj.getEmail();
+        //     String ruPass = daveObj.getPassword();
+        //     String ruAddy = daveObj.getAddress();
+        //     String ruLastPayment = convertDateToString(daveObj.getLastPayment());
+        //     System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
+        // }   
+        // System.out.println("updating date to currnet date");
+        // updatePaymentDate(email);
+        // {
+        //     RegisteredUser daveObj = getRU(email);
+        //     String ruName = daveObj.getName();
+        //     String ruEmail = daveObj.getEmail();
+        //     String ruPass = daveObj.getPassword();
+        //     String ruAddy = daveObj.getAddress();
+        //     String ruLastPayment = convertDateToString(daveObj.getLastPayment());
+        //     System.out.printf("%s, %s, %s, %s, %s\n", ruName, ruEmail, ruPass, ruAddy, ruLastPayment); 
+        // }   
 
-        System.out.println("\n- testing name");
-        String testName = "first last";
-        CreditCard testCard = new CreditCard("a", "123123123131", 0, 0);
-        RegisteredUser nameTest = new RegisteredUser("test@b.com", "pass", testName,  "addy", testCard, 0, date);
-        System.out.println("created new user: " + addRU(nameTest));
-        RegisteredUser returnRu = getRU("test@b.com");
-        System.out.println(returnRu.getName());
+        // System.out.println("\n- testing name");
+        // String testName = "first last";
+        // CreditCard testCard = new CreditCard("a", "123123123131", 0, 0);
+        // RegisteredUser nameTest = new RegisteredUser("test@b.com", "pass", testName,  "addy", testCard, 0, date);
+        // System.out.println("created new user: " + addRU(nameTest));
+        // RegisteredUser returnRu = getRU("test@b.com");
+        // System.out.println(returnRu.getName());
 
-        String title = "John Wick: Chapter 4";
-        System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
-        title = "Top Gun: Maverick";
-        System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
-       
+        // String title = "John Wick: Chapter 4";
+        // System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
+        // title = "Top Gun: Maverick";
+        // System.out.printf("movie %s publicly available: %b\n", title, moviePubliclyAvailable(title));
+
     }
 
     private static Connection getConnection() throws ClassNotFoundException, SQLException{
@@ -150,6 +151,44 @@ public class DatabaseController{
     }
 
     //LOGIN STUFF
+
+    public static ArrayList<String> getAllRUEmails() {
+        ArrayList<String> ruEmails = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT user.email FROM user INNER JOIN registered_user " +
+            "ON user.email = registered_user.email");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                String email = result.getString(1);
+
+                ruEmails.add(email);
+
+                System.out.printf("%s\n", email);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return ruEmails;
+    }
 
     //check if there is a RU with specified email
     public static boolean emailExists(String email){
@@ -247,6 +286,43 @@ public class DatabaseController{
         }
 
         return adminExists;
+    }
+
+    public static boolean addUser(String email) {
+        boolean success = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("INSERT INTO user(email) VALUES (?)");
+
+            statement.setString(1, email);
+
+            int newRows = statement.executeUpdate();
+
+            if (newRows == 0) {
+                System.out.println("coudlnt add new user to database");
+                return false;
+            }
+
+            success = true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return success;
     }
 
     //verify that there is a RU with given email and password
@@ -467,7 +543,7 @@ public class DatabaseController{
             success = true;
         } catch (Exception e) {
             System.out.println("error adding ru to database");
-            //e.printStackTrace();
+            e.printStackTrace();
 
         } finally {
             try {if (statement1 != null) statement1.close();} catch(Exception e) {e.printStackTrace();}
@@ -729,19 +805,110 @@ public class DatabaseController{
         return success;
     }
 
-    //check if staff member exists
-    public static boolean staffExists(Staff s){
-        return false;
-    }
-
     //add staff member
     public static boolean addStaff(Staff s){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("INSERT INTO staff(name, title) " +
+            "VALUES (?, ?)");
+
+            statement.setString(1, s.getName());
+            statement.setString(2, s.getJob());
+            
+            int newRows = statement.executeUpdate();
+
+            if (newRows == 0) {
+                System.out.println("coudlnt add staff to database");
+                return false;
+            }
+
+            success = true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}  
+        }
+
+        return success;
     }
 
     //remove staff member
     public static boolean removeStaff(Staff s){
-        return false;
+        boolean success = false;
+
+        Connection con = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("DELETE FROM staff WHERE name = ?");
+            statement.setString(1, s.getName());
+
+            success = statement.executeUpdate() > 0 ? true : false; 
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}     
+        }
+
+        return success;
+    }
+
+    public static ArrayList<Staff> getAllStaff() {
+        ArrayList<Staff> staff = new ArrayList<>();
+
+        Connection con = null;
+        ResultSet result = null;
+        PreparedStatement statement = null;
+
+        try {
+
+            con = DatabaseController.getConnection();
+
+            statement = con.prepareStatement("SELECT * FROM staff");
+
+            result = statement.executeQuery();
+
+            while (result.next()) 
+            {
+                String name = result.getString(1);
+                String title = result.getString(2);
+
+                staff.add(new Staff(name, title));
+
+                System.out.printf("name: %s, title: %s\n", name, title);
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
+            try {if (statement != null) statement.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (con != null) con.close();} catch(Exception e) {e.printStackTrace();}
+            try {if (result != null) result.close();} catch(Exception e) {e.printStackTrace();}
+        }
+
+        return staff;
     }
 
     //VIEWING STUFF

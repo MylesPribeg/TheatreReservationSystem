@@ -84,23 +84,16 @@ public class Admin extends User{
     }
 
     public boolean addStaff(Staff staff){
-
-
-        if (DatabaseController.staffExists(staff)){
-            return false;
-        }
-
-        DatabaseController.addStaff(staff);
-        return true;
+        return DatabaseController.addStaff(staff);
     }
 
 
     public boolean removeStaff(Staff staff){
-        if(DatabaseController.staffExists(staff)){
-            DatabaseController.removeStaff(staff);
-            return true;
-        }
-        return false;
+        return  DatabaseController.removeStaff(staff);
+    }
+
+    public ArrayList<Staff> getAllStaff() {
+        return DatabaseController.getAllStaff();
     }
 
 }

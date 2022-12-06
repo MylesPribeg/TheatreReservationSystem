@@ -47,6 +47,10 @@ public class LoginController{
         return new User();
     }
 
+    public boolean addUser(String email) {
+        return DatabaseController.addUser(null);
+    }
+
     //return User object associated with
     public User getUser(String email) {
         return DatabaseController.getUser(email);
