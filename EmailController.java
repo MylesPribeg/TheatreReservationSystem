@@ -7,7 +7,7 @@ public class EmailController {
         ArrayList<String> emails = DatabaseController.getAllRUEmails();
         for(String email: emails){
             email = ""; //remove this line to send email to given emails
-            SendEmail.send(email, message, "Movie Announcement");
+            //SendEmail.send(email, message, "Movie Announcement");
         }
     }
 
@@ -35,7 +35,7 @@ public class EmailController {
 
         //send out email to user
         System.out.println(contents);
-        SendEmail.send(email, contents, "Refund Receipt");
+        //SendEmail.send(email, contents, "Refund Receipt");
     }
 
     //sends a receipt and purchased tickets to user with given email
@@ -67,7 +67,7 @@ public class EmailController {
 
         //send out email to user
         System.out.println(contents);
-        SendEmail.send(email, contents, "Purchase Receipt");
+        //SendEmail.send(email, contents, "Purchase Receipt");
     }
 
 }
