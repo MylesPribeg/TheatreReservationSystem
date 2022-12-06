@@ -3,8 +3,12 @@ import java.util.ArrayList;
 public class EmailController {
 
 
-    public void sendAnnouncements(){
-        // get notif
+    public void sendAnnouncements(String message){
+        ArrayList<String> emails = DatabaseController.getAllRUEmails();
+        for(String email: emails){
+            email = ""; //remove this line to actually send email
+            SendEmail.send(email, message, "Movie Announcement");
+        }
     }
 
     public static void sendCancelationReceipt(String email, double refund, ArrayList<Ticket> tickets){
