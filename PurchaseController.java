@@ -42,8 +42,8 @@ public class PurchaseController {
         // at this point, users card has already been charged
 
         //check if movie is non-public and if 10% of seats have already been reserved
-        if(DatabaseController.moviePubliclyAvailable(showtime.getMovieName())){
-            if(DatabaseController.getTakenSeats(showtime).size()>8){
+        if(!DatabaseController.moviePubliclyAvailable(showtime.getMovieName())){
+            if(DatabaseController.getTakenSeats(showtime).size() + seats.size() > 8){
                 return false;
             }
         }

@@ -54,7 +54,7 @@ public class LoginController{
 
     //adds user with given email to the database
     public boolean addUser(String email) {
-        return DatabaseController.addUser(null);
+        return DatabaseController.addUser(email);
     }
 
     //return User object associated with
