@@ -42,7 +42,7 @@ public class SendEmail {
             protected PasswordAuthentication getPasswordAuthentication() {
 
                 //enter email and password here to use google smtp
-                return new PasswordAuthentication("ggoober421@gmail.com", "yxedfiaufloeqkpt");
+                return new PasswordAuthentication("sender@gmail.com", "********");
 
             }
 
